@@ -24,21 +24,15 @@ Sin salida = libre. Si `LISTEN`, elegir otro puerto y actualizar `.env` del fron
 | **Frontend (esta GUI)** | http://localhost:3300/ | 3300 (`FRONTEND_PORT`) |
 | **Backend (API; mismo valor que `VITE_API_BASE_URL`)** | http://localhost:9001/ | 9001 (`NGINX_HTTP_PORT` del backend) |
 
-## URLs en desarrollo local (no confundir puertos)
-
-> **Verificar siempre desde `.env` antes de afirmar.** Valores típicos:
-
-| Qué | URL | Puerto |
-|-----|-----|--------|
-| **Frontend (esta GUI)** | http://localhost:3300/ | 3300 (`FRONTEND_PORT`) |
-| **Backend (API; mismo valor que `VITE_API_BASE_URL`)** | http://localhost:9001/ | 9001 (`NGINX_HTTP_PORT` del backend) |
-
-**No** indicar al usuario ni configurar el frontend con **:8000** para la API en local: 8000 es sólo el puerto **interno** del contenedor FastAPI; hacia fuera el stack usa **9001** (nginx; verificar libre con `ss -tln`). Confirmar siempre con `progio-frontend/.env*` y `progio-backend/.env*` (`NGINX_HTTP_PORT`).
+**No** configurar la API del navegador con **:8000**: es puerto **interno** del contenedor FastAPI; hacia fuera el backend usa **9001** vía nginx. Confirmar con `progio-frontend/.env*` y `progio-backend/.env*`.
 
 ## Retomar sesión (`/continuar`)
 
-- **Backend** ya expone auth en `/api/v1/auth/*` (POC.2). Este repo: `npm install`, copiar `.env.example` → `.env`, `npm run dev`, probar login con usuario seed del backend (`admin.general@example.com` si `SEED_EMAIL_DOMAIN=example.com` + `SEED_DEMO_PASSWORD`).
-- **Siguiente en este repo:** `docs/DEVPLAN.md` — **POC.1.3** (**AQUÍ ESTAMOS**: Dockerfile multi-stage), luego **1.4–1.5**, **1.10** (verificación compose + build), **POC.2.5** (`RoleGuard`). Backend siguiente: **POC.3** en `progio-backend/`.
+El comando **`/continuar`** (y seguir este `AGENTS.md` en orden) deja el contexto **al día** siempre que existan y se lean los archivos locales: **`CLAUDE.md`**, **`docs/DEVPLAN.md`** (marca **«AQUÍ ESTAMOS»**), **`memory/MEMORY.md`**, **`.env` / `.env.example`**. No depende del chat anterior: el modelo debe **abrir** esas rutas, no asumir.
+
+- **Backend hermano** (`progio-backend/`): auth **`/api/v1/auth/*`** (POC.2 ✓); catálogo **`GET /api/v1/contracts`**, **`/sites`**, **`/assets`** paginados (POC.3 ✓). Siguiente trabajo backend planificado: **POC.4** (servicios/eventos); **no** es prerequisito para seguir el frontend en modo demo incremental.
+- **Este repo:** `npm install`, `.env.example` → `.env`, `npm run dev`, login con seed del backend (`admin.general@…` + `SEED_DEMO_PASSWORD` si `SEED_EMAIL_DOMAIN=example.com`).
+- **Siguiente en este repo** (prioridad **demo navegable por slices**, ver `docs/DEVPLAN.md`): **POC.1.3** (**AQUÍ ESTAMOS** — Dockerfile multi-stage), luego **1.4–1.5**, **1.10** (verificación compose + build), **POC.2.5** (`ProtectedRoute` / `RoleGuard`). Opcional después: consumir catálogo en UI (`docs/API_INTEGRATION.md`) antes del núcleo servicios (**frontend POC.4** depende de backend POC.4 para `/services`).
 
 ## Cuándo aplicar
 

@@ -32,9 +32,13 @@
 |---------|----------------------|
 | **Tenants** (super-admin) | `GET/POST/GET{id}/PATCH{id} /tenants` |
 | **Users** | `GET/POST/GET{id}/PATCH{id}/DELETE{id} /users` (filtros: search, role, is_active, page, per_page) |
-| **Contracts** | `GET/POST/GET{id}/PATCH{id} /contracts` + `GET /contracts/{id}/quota` |
-| **Sites** | `GET/POST/GET{id}/PATCH{id} /sites` |
-| **Assets** | `GET/POST/GET{id}/PATCH{id} /assets` (filtros: contract_id, type, fuel) |
+| **Contracts** | `GET /contracts` (lista paginada POC.3); `POST/GET/PATCH…` en roadmap |
+| **Sites** | `GET /sites` (lista + filtro `contract_id`); resto en roadmap |
+| **Assets** | `GET /assets` (filtros: `contract_id`, `vehicle_type`, `fuel_type`) — POST/PATCH/detalle en roadmap |
+
+## Catálogo (POC.3)
+
+El backend expone listados paginados: `GET /contracts`, `GET /sites`, `GET /assets` con `page` y `per_page`. Filtros opcionales: en `sites` → `contract_id`; en `assets` → `contract_id`, `vehicle_type`, `fuel_type`. Alta/edición/detalle por id aún no disponibles en API.
 
 ## Servicios + Eventos (núcleo)
 

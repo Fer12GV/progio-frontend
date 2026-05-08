@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import Card from "@/components/common/Card.jsx";
 import Spinner from "@/components/common/Spinner.jsx";
 import EventTimeline from "@/components/services/EventTimeline.jsx";
+import ServiceActionBar from "@/components/services/ServiceActionBar.jsx";
 import { listServiceEvents } from "@/api/events.js";
 import { getService } from "@/api/services.js";
 
@@ -53,6 +54,26 @@ export default function ServiceDetailPage() {
     () => `service-detail-${String(serviceId ?? "").replace(/[^a-zA-Z0-9_-]/g, "") || "id"}`,
     [serviceId],
   );
+
+  const reloadDetail = useCallback(async () => {
+    if (!serviceId) return;
+    try {
+      const svc = await getService(serviceId);
+      setService(svc);
+      let evs = normalizeEventList(svc?.events);
+      if (evs.length === 0) {
+        try {
+          const evData = await listServiceEvents(serviceId);
+          evs = normalizeEventList(evData);
+        } catch {
+          /* timeline opcional */
+        }
+      }
+      setEvents(sortEventsAsc(evs));
+    } catch {
+      /* el usuario ya ve errores en la carga inicial */
+    }
+  }, [serviceId]);
 
   useEffect(() => {
     if (!serviceId) {
@@ -184,6 +205,10 @@ export default function ServiceDetailPage() {
                 </div>
               ) : null}
             </dl>
+          </Card>
+
+          <Card title="Acciones" className={styles.cardMargin}>
+            <ServiceActionBar serviceId={serviceId} service={service} onAfterMutation={reloadDetail} />
           </Card>
 
           <Card title="Eventos" className={styles.cardMargin}>

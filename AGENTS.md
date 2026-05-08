@@ -38,7 +38,7 @@ Sin salida = libre. Si `LISTEN`, elegir otro puerto y actualizar `.env` del fron
 ## Retomar sesión (`/continuar`)
 
 - **Backend** ya expone auth en `/api/v1/auth/*` (POC.2). Este repo: `npm install`, copiar `.env.example` → `.env`, `npm run dev`, probar login con usuario seed del backend (`admin.general@example.com` si `SEED_EMAIL_DOMAIN=example.com` + `SEED_DEMO_PASSWORD`).
-- **Siguiente en este repo:** `docs/DEVPLAN.md` — **POC.1.10** (Docker) y **POC.2.5** (`RoleGuard`). Backend siguiente: **POC.3** en `progio-backend/`.
+- **Siguiente en este repo:** `docs/DEVPLAN.md` — **POC.1.3** (**AQUÍ ESTAMOS**: Dockerfile multi-stage), luego **1.4–1.5**, **1.10** (verificación compose + build), **POC.2.5** (`RoleGuard`). Backend siguiente: **POC.3** en `progio-backend/`.
 
 ## Cuándo aplicar
 

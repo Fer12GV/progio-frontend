@@ -6,7 +6,7 @@
 
 - **Base URL**: `import.meta.env.VITE_API_BASE_URL` (en este proyecto: `http://localhost:9001`).
 - **Prefijo**: `import.meta.env.VITE_API_PREFIX` (típicamente `/api/v1`).
-- **Auth**: `Authorization: Bearer <access_token>`.
+- **Auth**: `Authorization: Bearer <access_token>` — el `apiClient` recibe el header vía interceptor de petición en `AuthContext` cuando hay sesión (no enviar `tenant_id` en query/body).
 - **Error format**: `{ detail: string }`.
 - **Paginación**: `{ items, total, page, per_page }`.
 - **Timestamps**: ISO 8601 UTC.
@@ -40,6 +40,8 @@
 
 El backend expone listados paginados: `GET /contracts`, `GET /sites`, `GET /assets` con `page` y `per_page`. Filtros opcionales: en `sites` → `contract_id`; en `assets` → `contract_id`, `vehicle_type`, `fuel_type`. Alta/edición/detalle por id aún no disponibles en API.
 
+**Frontend:** `src/api/contracts.js` (`listContracts`), `src/api/assets.js` (`listAssets`). `GET /sites` puede añadirse como `src/api/sites.js` cuando haga falta en UI.
+
 ## Servicios + Eventos (núcleo)
 
 | Método | Ruta | Descripción |
@@ -58,6 +60,8 @@ El backend expone listados paginados: `GET /contracts`, `GET /sites`, `GET /asse
 | POST | `/services/{id}/reprocess` | Reproceso (con motivo obligatorio) |
 | GET | `/services/{id}/events` | Eventos del servicio (read-only, inmutables) |
 | POST | `/services/{id}/events/sync` | **Sincronización offline** (lote con `client_event_id`) |
+
+**Frontend:** `src/api/services.js`, `src/api/events.js` (`listServiceEvents`, `syncServiceEvents`). UI: `ServicesPage` (lista), `ServiceDetailPage` + `components/services/EventTimeline.jsx` (detalle + eventos inmutables).
 
 **Errores típicos:**
 

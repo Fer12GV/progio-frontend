@@ -25,6 +25,20 @@ export function AuthProvider({ children }) {
     accessRef.current = accessToken;
   }, [accessToken]);
 
+  useEffect(() => {
+    const id = apiClient.interceptors.request.use((config) => {
+      const token = accessRef.current;
+      if (token) {
+        config.headers = config.headers ?? {};
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    });
+    return () => {
+      apiClient.interceptors.request.eject(id);
+    };
+  }, []);
+
   const applySession = useCallback((payload) => {
     setAccessToken(payload.access_token);
     setStoredRefreshToken(payload.refresh_token);

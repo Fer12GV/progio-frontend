@@ -91,6 +91,18 @@ export default function AppLayout() {
             </span>
             <span className={styles.navLabel}>Inicio</span>
           </NavLink>
+          <NavLink
+            to="/services"
+            className={({ isActive }) =>
+              isActive ? `${styles.navLink} ${styles.navLinkActive}` : styles.navLink
+            }
+            onClick={onNavigate}
+          >
+            <span className={styles.navIcon} aria-hidden>
+              📋
+            </span>
+            <span className={styles.navLabel}>Servicios</span>
+          </NavLink>
         </nav>
 
         <div className={styles.sidebarFooter}>

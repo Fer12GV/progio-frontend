@@ -1,0 +1,90 @@
+.dashboard {
+  width: 100%;
+}
+
+.pageTitle {
+  margin: 0 0 calc(var(--space) * 2);
+  font-size: 1.5rem;
+}
+
+.grid {
+  display: grid;
+  gap: calc(var(--space) * 2);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 720px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.gridCard {
+  margin: 0;
+  width: 100%;
+  min-height: 0;
+}
+
+.roleRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.cardTitle {
+  margin: 0 0 var(--space);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.lead {
+  margin: 0 0 var(--space);
+  font-size: 1.05rem;
+}
+
+.adminNote {
+  margin-top: calc(var(--space) * 1.5);
+  margin-bottom: 0;
+  padding-top: var(--space);
+  border-top: 1px solid #334155;
+}
+
+.quickDl {
+  margin: 0 0 calc(var(--space) * 1.5);
+}
+
+.quickRow {
+  margin-bottom: calc(var(--space) * 1.35);
+}
+
+.quickRow:last-child {
+  margin-bottom: 0;
+}
+
+.quickRow dt {
+  font-weight: 600;
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+}
+
+.quickRow dd {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-muted);
+  line-height: 1.45;
+}
+
+.mono {
+  font-size: 0.8rem;
+  word-break: break-all;
+}

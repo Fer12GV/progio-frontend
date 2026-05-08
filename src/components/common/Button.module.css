@@ -1,0 +1,73 @@
+.root {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: auto;
+  min-height: 44px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  font-family: inherit;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition:
+    opacity 0.15s ease,
+    transform 0.05s ease;
+}
+
+.root:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.root:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.primary {
+  background: linear-gradient(90deg, var(--color-accent), var(--color-accent-2));
+  color: #04101f;
+}
+
+.secondary {
+  background: #1f2937;
+  color: var(--color-text);
+  border-color: #334155;
+}
+
+.danger {
+  background: linear-gradient(90deg, #b91c1c, #f87171);
+  color: #fff;
+}
+
+.ghost {
+  background: transparent;
+  color: var(--color-text);
+  border-color: #475569;
+}
+
+.link {
+  background: transparent;
+  color: var(--color-accent-2);
+  border: none;
+  text-decoration: underline;
+  min-height: auto;
+  padding: 6px 8px;
+  font-weight: 600;
+}
+
+.sm {
+  min-height: 36px;
+  padding: 6px 12px;
+  font-size: 0.875rem;
+}
+
+.spinnerSlot {
+  display: inline-flex;
+}

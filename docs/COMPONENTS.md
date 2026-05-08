@@ -27,11 +27,17 @@ Este documento es la guía de los componentes a construir en el frontend, agrupa
 | `EmptyState` | `icon`, `title`, `description`, `action` | Para listas vacías |
 | `ConfirmDialog` | `title`, `message`, `confirmLabel`, `onConfirm` | Para acciones destructivas |
 
+## Layout (`src/components/layout/`)
+
+| Componente | Notas |
+|-----------|--------|
+| `AppLayout` | Shell con sidebar colapsable (desktop), drawer móvil (`matchMedia` ≤767px), `Outlet`, nav + **Salir**. |
+
 ## Auth (`src/components/auth/`)
 
 - `LoginForm` — formulario email + password + manejo 423 (bloqueo).
-- `ProtectedRoute` — wrapper que redirige a `/login` si no hay sesión.
-- `RoleGuard` — render condicional por rol.
+- `ProtectedRoute` — wrapper que redirige a `/login` si no hay sesión — **implementado** (`src/components/auth/ProtectedRoute.jsx`).
+- `RoleGuard` — render condicional por rol — **implementado** (`src/components/auth/RoleGuard.jsx`); `useRole` en `src/hooks/useRole.js`.
 
 ## Dashboard (`src/components/dashboard/`)
 

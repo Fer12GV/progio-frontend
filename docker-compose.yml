@@ -1,0 +1,23 @@
+# PROGIO Frontend — sólo servicio GUI (API en progio-backend/docker-compose.yml).
+# Variables: copiar .env.example → .env (VITE_*, FRONTEND_PORT).
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:9001}
+        VITE_API_PREFIX: ${VITE_API_PREFIX:-/api/v1}
+    image: progio-frontend:local
+    ports:
+      - "${FRONTEND_PORT:-3300}:80"
+    env_file:
+      - path: .env
+        required: false
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s

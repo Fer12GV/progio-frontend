@@ -1,0 +1,30 @@
+.root {
+  background: linear-gradient(145deg, var(--color-card), #0b1224);
+  border: 1px solid #1f2937;
+  border-radius: var(--radius);
+  padding: calc(var(--space) * 2);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.28);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space);
+  margin-bottom: calc(var(--space) * 1.25);
+}
+
+.title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.actions {
+  flex-shrink: 0;
+}
+
+.body {
+  min-height: 0;
+}

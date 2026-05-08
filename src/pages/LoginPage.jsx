@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 
+import Button from "@/components/common/Button.jsx";
+import Input from "@/components/common/Input.jsx";
 import { useAuth } from "@/context/AuthContext.jsx";
 
 export default function LoginPage() {
@@ -28,30 +30,28 @@ export default function LoginPage() {
       <form className="card" onSubmit={onSubmit}>
         <h1>PROGIO</h1>
         <p className="muted">Iniciar sesión</p>
-        <label>
-          Email
-          <input
-            type="email"
-            autoComplete="username"
-            value={email}
-            onChange={(ev) => setEmail(ev.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Contraseña
-          <input
-            type="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(ev) => setPassword(ev.target.value)}
-            required
-          />
-        </label>
+        <Input
+          label="Email"
+          type="email"
+          name="email"
+          autoComplete="username"
+          value={email}
+          onChange={(ev) => setEmail(ev.target.value)}
+          required
+        />
+        <Input
+          label="Contraseña"
+          type="password"
+          name="password"
+          autoComplete="current-password"
+          value={password}
+          onChange={(ev) => setPassword(ev.target.value)}
+          required
+        />
         {error ? <p className="error">{error}</p> : null}
-        <button type="submit" disabled={loading}>
-          {loading ? "Entrando…" : "Entrar"}
-        </button>
+        <Button type="submit" fullWidth loading={loading}>
+          Entrar
+        </Button>
       </form>
     </main>
   );

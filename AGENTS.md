@@ -32,7 +32,7 @@ El comando **`/continuar`** (y seguir este `AGENTS.md` en orden) deja el context
 
 - **Backend hermano** (`progio-backend/`): auth **`/api/v1/auth/*`** (POC.2 ✓); catálogo **`GET /api/v1/contracts`**, **`/sites`**, **`/assets`** paginados (POC.3 ✓). Siguiente trabajo backend planificado: **POC.4** (servicios/eventos); **no** es prerequisito para seguir el frontend en modo demo incremental.
 - **Este repo:** `npm install`, `.env.example` → `.env`, `npm run dev`, login con seed del backend (`admin.general@…` + `SEED_DEMO_PASSWORD` si `SEED_EMAIL_DOMAIN=example.com`).
-- **Siguiente en este repo** (prioridad **demo navegable por slices**, ver `docs/DEVPLAN.md`): **POC.1.3** (**AQUÍ ESTAMOS** — Dockerfile multi-stage), luego **1.4–1.5**, **1.10** (verificación compose + build), **POC.2.5** (`ProtectedRoute` / `RoleGuard`). Opcional después: consumir catálogo en UI (`docs/API_INTEGRATION.md`) antes del núcleo servicios (**frontend POC.4** depende de backend POC.4 para `/services`).
+- **Siguiente en este repo** (prioridad **demo navegable por slices**, ver `docs/DEVPLAN.md`): **POC.4.1** (**AQUÍ ESTAMOS** — módulos API `services` / `events` / `contracts` / `assets`). Opcional: listados catálogo (GET backend POC.3). **Backend POC.4** en `progio-backend/` para `/services` y pantallas completas POC.4.
 
 ## Cuándo aplicar
 

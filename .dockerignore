@@ -1,0 +1,23 @@
+# Dependencies and artifacts
+node_modules
+dist
+
+# Git and editor
+.git
+.gitignore
+.cursor
+
+# Local env (secrets); VITE_* come from build args in CI/Docker
+.env
+.env.*
+!.env.example
+
+# Logs and OS noise
+*.log
+npm-debug.log*
+.DS_Store
+
+# Docs and memory — not needed for vite build
+docs
+memory
+coverage

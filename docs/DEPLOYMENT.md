@@ -6,6 +6,10 @@
 - Sólo cambia `.env`.
 - Imagen multi-stage: Node 20 build → Nginx Alpine serve.
 
+## CI
+
+En GitHub: workflow `.github/workflows/ci.yml` (`npm ci`, `lint`, `build` con `VITE_*`, `docker compose build`) en push/PR a `main` y `master`.
+
 ## Producción (VPS) — flujo recomendado
 
 1. **Local**: hacer cambios, `npm run lint` + `npm run build` + `docker compose up --build -d` para validar.

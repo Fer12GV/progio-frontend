@@ -26,6 +26,9 @@ Abrir **http://localhost:3300** (o el puerto definido en `FRONTEND_PORT` / `VITE
 | `npm run build` | Build de producción |
 | `npm run preview` | Previsualizar build |
 | `npm run lint` | ESLint |
+| `npm run verify` | `lint` + `build` (necesita `.env` con `VITE_*`) |
+
+**CI:** en cada push/PR a `main` o `master`, GitHub Actions ejecuta lint, build (con `VITE_*` de CI) y `docker compose build` (`.github/workflows/ci.yml`).
 
 ## Documentación
 

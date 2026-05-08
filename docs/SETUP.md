@@ -23,16 +23,16 @@ docker compose up --build -d
 npm install
 cp .env.example .env
 npm run dev
-# abrir http://localhost:5173 (puerto Vite por defecto)
+# abrir http://localhost:3300 (o el valor de FRONTEND_PORT / VITE_DEV_PORT en .env; ver vite.config.js)
 ```
 
-> Nota: el puerto en local sin Docker es el de Vite (5173 por defecto). El puerto **3300** sólo aplica al stack Docker.
+> Nota: el puerto del dev server lo define `vite.config.js` (por defecto **3300** vía `FRONTEND_PORT` en `.env`). El **3300** en Docker es el mapeo host del contenedor Nginx (`FRONTEND_PORT`).
 
 ## Variables de entorno
 
 | Variable | Descripción | Default |
 |----------|-------------|---------|
-| `VITE_API_BASE_URL` | URL base del backend (ej. `http://localhost:9001`) | (sin default — obligatoria) |
+| `VITE_API_PREFIX` | Prefijo API (debe coincidir con backend) | `/api/v1` |
 | `VITE_APP_NAME` | Nombre de la app | `PROGIO` |
 | `VITE_APP_ENV` | `development` / `production` | `development` |
 | `VITE_POLLING_INTERVAL_MS` | Polling tareas Celery | `5000` |
@@ -52,6 +52,18 @@ docker compose up --build -d
 
 Confirmar que `VITE_API_BASE_URL` del frontend coincide con `NGINX_HTTP_PORT` del backend (en este proyecto: **9001**; comprobar con `ss -tln` que el puerto sigue libre).
 
+## Verificación POC.1.10 (build + Docker + API)
+
+Checklist antes de dar por cerrada la infra mínima (`docs/DEVPLAN.md`):
+
+1. **Backend en marcha** en la URL de `VITE_API_BASE_URL` (ej. `curl -sf http://localhost:9001/health`).
+2. **Sin Docker:** `npm run verify` (requiere `.env` con `VITE_API_BASE_URL` y `VITE_API_PREFIX`; equivale a `lint` + `build`).
+3. **Imagen:** `docker compose build` (usa los defaults del `docker-compose.yml` si no hay `.env`).
+4. **GUI servida:** `docker compose up --build -d` y abrir `http://localhost:${FRONTEND_PORT:-3300}` — debe cargar la SPA (login).
+5. **Login real:** en el navegador, iniciar sesión con un usuario seed del backend (`SEED_EMAIL_DOMAIN` + `SEED_DEMO_PASSWORD` en `progio-backend/.env`). Si las credenciales no coinciden con el ejemplo de `.env.example`, usar las de tu backend local.
+
+**CI:** el workflow `.github/workflows/ci.yml` ejecuta `npm ci`, `lint`, `build` (con `VITE_*` de ejemplo) y `docker compose build` en cada push/PR a `main`/`master`.
+
 ## Comandos esenciales
 
 ```bash
@@ -59,7 +71,7 @@ npm run dev       # Vite dev server
 npm run build     # build producción → dist/
 npm run preview   # preview del build
 npm run lint      # ESLint
-npm run format    # Prettier
+npm run verify    # lint + build (necesita .env con VITE_*)
 ```
 
 ## Estructura tras el primer build

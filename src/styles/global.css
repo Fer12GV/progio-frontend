@@ -37,6 +37,12 @@ main.auth-layout {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
 }
 
+/* Variante ancha para contenido dentro del layout principal (no login full-viewport). */
+.cardFluid {
+  width: 100%;
+  max-width: 100%;
+}
+
 label {
   display: flex;
   flex-direction: column;
@@ -71,6 +77,18 @@ button:disabled {
 
 .muted {
   color: var(--color-muted);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .error {

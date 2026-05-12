@@ -1,3 +1,6 @@
+import RoleGuard from "@/components/auth/RoleGuard.jsx";
+import { FINANCE_VISIBLE_ROLES } from "@/constants/rbacFinance.js";
+
 import styles from "./EventTimeline.module.css";
 
 /**
@@ -96,9 +99,19 @@ function EventItem({ event: ev }) {
           ) : null}
         </dl>
         {showPayload ? (
-          <pre className={styles.payload} tabIndex={0}>
-            {detail}
-          </pre>
+          <RoleGuard
+            roles={FINANCE_VISIBLE_ROLES}
+            fallback={
+              <p className={styles.payloadHidden} role="status">
+                El detalle completo del evento no se muestra en tu perfil (puede incluir costes o
+                datos de facturación).
+              </p>
+            }
+          >
+            <pre className={styles.payload} tabIndex={0}>
+              {detail}
+            </pre>
+          </RoleGuard>
         ) : null}
       </div>
     </li>

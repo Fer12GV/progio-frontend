@@ -104,3 +104,14 @@
   border: 1px solid #334155;
   color: var(--color-muted);
 }
+
+.payloadHidden {
+  margin: calc(var(--space) * 1.25) 0 0;
+  padding: calc(var(--space) * 1);
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--color-muted);
+  border-radius: 8px;
+  border: 1px dashed #334155;
+  background: rgba(15, 23, 42, 0.35);
+}

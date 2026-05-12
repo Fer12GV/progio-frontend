@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 import Spinner from "@/components/common/Spinner.jsx";
-import { useRole } from "@/hooks/useRole.js";
+import { useCanSeeFinance } from "@/hooks/useCanSeeFinance.js";
 import {
   formatMoney,
   normalizePrebillItems,
@@ -14,14 +14,6 @@ import {
 } from "@/utils/prebillDisplay.js";
 
 import styles from "./PrebillView.module.css";
-
-const MONEY_ROLES = [
-  "admin_general",
-  "admin_contrato",
-  "coordinador_operaciones",
-  "supervisor",
-  "interventor",
-];
 
 /**
  * @param {Record<string, unknown> | null | undefined} prebill
@@ -81,8 +73,7 @@ function resolveAssetLabel(prebill, service) {
  * }} props
  */
 export default function PrebillView({ prebill, service = null, loading = false, error = null, className = "" }) {
-  const { hasAny } = useRole();
-  const canSeeMoney = hasAny(MONEY_ROLES);
+  const canSeeMoney = useCanSeeFinance();
 
   const currency = useMemo(() => prebillCurrency(prebill), [prebill]);
   const items = useMemo(() => normalizePrebillItems(prebill), [prebill]);

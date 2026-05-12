@@ -58,7 +58,7 @@ Sin Redux. Si en V2 se necesita más, se reconsidera.
 ### 5. Hooks — `src/hooks/`
 
 - `useAuth`, `useRole` (`hasAny`, `hasAll`).
-- `useServices`, `useEvents`, `usePrebills`, etc. (CRUD por dominio).
+- `useServices`, `useService`, `useEvents` — datos de servicios + timeline con `AbortController` (**implementados** en POC.4.6); `usePrebills`, etc. en roadmap.
 - `useTaskStatus(taskId)` para polling de tareas Celery (export, Siigo retry).
 - `useOfflineSync()` para captura local + flush al volver online.
 - `useToast()` para notificaciones unificadas.

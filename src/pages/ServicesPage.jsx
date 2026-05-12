@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import Card from "@/components/common/Card.jsx";
@@ -6,7 +6,8 @@ import Select from "@/components/common/Select.jsx";
 import Spinner from "@/components/common/Spinner.jsx";
 import { listAssets } from "@/api/assets.js";
 import { listContracts } from "@/api/contracts.js";
-import { listServices } from "@/api/services.js";
+import { useServices } from "@/hooks/useServices.js";
+import { formatApiDetail, isCanceledError } from "@/utils/serviceApiHelpers.js";
 
 import styles from "./ServicesPage.module.css";
 
@@ -22,16 +23,7 @@ const STATUS_OPTIONS = [
   { value: "Bloqueado", label: "Bloqueado" },
 ];
 
-function isCanceled(err) {
-  return err?.code === "ERR_CANCELED" || err?.name === "CanceledError";
-}
-
-function formatDetail(err) {
-  const d = err?.response?.data?.detail;
-  if (typeof d === "string") return d;
-  if (Array.isArray(d)) return d.map((x) => x.msg ?? JSON.stringify(x)).join(" — ");
-  return err?.message ?? "Error al cargar datos";
-}
+const PER_PAGE = 20;
 
 export default function ServicesPage() {
   const [contracts, setContracts] = useState([]);
@@ -43,16 +35,16 @@ export default function ServicesPage() {
   const [assetId, setAssetId] = useState("");
   const [page, setPage] = useState(1);
 
-  const [items, setItems] = useState([]);
-  const [total, setTotal] = useState(0);
-  const perPage = 20;
-  const [servicesLoading, setServicesLoading] = useState(true);
-  const [servicesUnavailable, setServicesUnavailable] = useState(false);
-  const [servicesError, setServicesError] = useState(null);
+  const { items, total, loading: servicesLoading, error: servicesError, unavailable: servicesUnavailable } =
+    useServices({
+      page,
+      perPage: PER_PAGE,
+      status,
+      contractId,
+      assetId,
+    });
 
-  const abortServicesRef = useRef(null);
-
-  const totalPages = useMemo(() => Math.max(1, Math.ceil(total / perPage)), [total]);
+  const totalPages = useMemo(() => Math.max(1, Math.ceil(total / PER_PAGE)), [total]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -65,8 +57,8 @@ export default function ServicesPage() {
         if (cancelled) return;
         setContracts(Array.isArray(cData?.items) ? cData.items : []);
       } catch (err) {
-        if (cancelled || isCanceled(err)) return;
-        setCatalogError(formatDetail(err));
+        if (cancelled || isCanceledError(err)) return;
+        setCatalogError(formatApiDetail(err));
         setContracts([]);
       }
     }
@@ -90,7 +82,7 @@ export default function ServicesPage() {
         if (cancelled) return;
         setAssets(Array.isArray(aData?.items) ? aData.items : []);
       } catch (err) {
-        if (cancelled || isCanceled(err)) return;
+        if (cancelled || isCanceledError(err)) return;
         setAssets([]);
       }
     }
@@ -101,52 +93,6 @@ export default function ServicesPage() {
       controller.abort();
     };
   }, [contractId]);
-
-  const loadServices = useCallback(async () => {
-    abortServicesRef.current?.abort();
-    const controller = new AbortController();
-    abortServicesRef.current = controller;
-    setServicesLoading(true);
-    setServicesError(null);
-    setServicesUnavailable(false);
-    try {
-      const params = {
-        page,
-        per_page: perPage,
-      };
-      if (status) params.status = status;
-      if (contractId) params.contract_id = contractId;
-      if (assetId) params.asset_id = assetId;
-
-      const data = await listServices(params, { signal: controller.signal });
-      if (controller.signal.aborted) return;
-      setItems(Array.isArray(data?.items) ? data.items : []);
-      setTotal(typeof data?.total === "number" ? data.total : 0);
-    } catch (err) {
-      if (isCanceled(err)) return;
-      const httpStatus = err?.response?.status;
-      if (httpStatus === 404 || httpStatus === 405) {
-        setServicesUnavailable(true);
-        setItems([]);
-        setTotal(0);
-        return;
-      }
-      setServicesError(formatDetail(err));
-      setItems([]);
-      setTotal(0);
-    } finally {
-      if (!controller.signal.aborted) {
-        setServicesLoading(false);
-      }
-    }
-  }, [page, status, contractId, assetId]);
-
-  useEffect(() => {
-    void loadServices();
-    return () => {
-      abortServicesRef.current?.abort();
-    };
-  }, [loadServices]);
 
   const onContractChange = (e) => {
     setContractId(e.target.value);

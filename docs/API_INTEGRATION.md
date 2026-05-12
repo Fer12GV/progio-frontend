@@ -61,7 +61,7 @@ El backend expone listados paginados: `GET /contracts`, `GET /sites`, `GET /asse
 | GET | `/services/{id}/events` | Eventos del servicio (read-only, inmutables) |
 | POST | `/services/{id}/events/sync` | **Sincronización offline** (lote con `client_event_id`) |
 
-**Frontend:** `src/api/services.js`, `src/api/events.js`, `src/api/users.js` (`listUsers`). UI: `ServicesPage` (lista), `ServiceDetailPage` + `EventTimeline.jsx` + `ServiceActionBar.jsx` + modales (`AssignOperatorModal`, `RegisterInputsModal`, `CancelModal`, `ReprocessModal`) + `common/Modal.jsx`.
+**Frontend:** `src/api/services.js`, `src/api/events.js`, `src/api/users.js` (`listUsers`). Hooks: `useServices`, `useService`, `useEvents`. UI: `ServicesPage`, `ServiceDetailPage` + `EventTimeline.jsx` + `ServiceActionBar.jsx` + modales (`AssignOperatorModal`, `RegisterInputsModal`, `CancelModal`, `ReprocessModal`) + `common/Modal.jsx`.
 
 **Errores típicos:**
 

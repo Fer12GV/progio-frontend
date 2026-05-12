@@ -32,7 +32,7 @@ El comando **`/continuar`** (y seguir este `AGENTS.md` en orden) deja el context
 
 - **Backend hermano** (`progio-backend/`): auth **`/api/v1/auth/*`** (POC.2 ✓); catálogo **`GET /api/v1/contracts`**, **`/sites`**, **`/assets`** paginados (POC.3 ✓). Siguiente trabajo backend planificado: **POC.4** (servicios/eventos); **no** es prerequisito para seguir el frontend en modo demo incremental.
 - **Este repo:** `npm install`, `.env.example` → `.env`, `npm run dev`, login con seed del backend (`admin.general@…` + `SEED_DEMO_PASSWORD` si `SEED_EMAIL_DOMAIN=example.com`).
-- **Siguiente en este repo** (prioridad **demo navegable por slices**, ver `docs/DEVPLAN.md`): **POC.4.6** (**AQUÍ ESTAMOS** — hooks `useServices`, `useService`, `useEvents`). Modales POC.4.5 ya en **`ServiceActionBar`**; **[BACKEND]** POC.4 para transiciones reales.
+- **Siguiente en este repo** (prioridad **demo navegable por slices**, ver `docs/DEVPLAN.md`): **POC.5.1** (**AQUÍ ESTAMOS** — `prebills.js` / API prefactura). Hooks **POC.4.6** ya en `ServicesPage` / `ServiceDetailPage`; **[BACKEND]** POC.4 para transiciones reales.
 
 ## Cuándo aplicar
 

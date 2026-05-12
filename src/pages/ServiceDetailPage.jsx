@@ -1,54 +1,38 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import Card from "@/components/common/Card.jsx";
 import Spinner from "@/components/common/Spinner.jsx";
 import EventTimeline from "@/components/services/EventTimeline.jsx";
 import ServiceActionBar from "@/components/services/ServiceActionBar.jsx";
-import { listServiceEvents } from "@/api/events.js";
-import { getService } from "@/api/services.js";
+import { useEvents } from "@/hooks/useEvents.js";
+import { useService } from "@/hooks/useService.js";
+import { normalizeEventList, sortEventsAsc } from "@/utils/serviceApiHelpers.js";
 
 import styles from "./ServiceDetailPage.module.css";
-
-function isCanceled(err) {
-  return err?.code === "ERR_CANCELED" || err?.name === "CanceledError";
-}
-
-function formatDetail(err) {
-  const d = err?.response?.data?.detail;
-  if (typeof d === "string") return d;
-  if (Array.isArray(d)) return d.map((x) => x.msg ?? JSON.stringify(x)).join(" — ");
-  return err?.message ?? "Error al cargar datos";
-}
-
-function normalizeEventList(raw) {
-  if (!raw) return [];
-  if (Array.isArray(raw)) return raw;
-  if (Array.isArray(raw.items)) return raw.items;
-  return [];
-}
-
-function sortEventsAsc(events) {
-  const list = [...events];
-  list.sort((a, b) => {
-    const ta = Date.parse(a?.created_at ?? a?.timestamp ?? a?.captured_at ?? 0);
-    const tb = Date.parse(b?.created_at ?? b?.timestamp ?? b?.captured_at ?? 0);
-    if (Number.isNaN(ta) && Number.isNaN(tb)) return 0;
-    if (Number.isNaN(ta)) return 1;
-    if (Number.isNaN(tb)) return -1;
-    return ta - tb;
-  });
-  return list;
-}
 
 export default function ServiceDetailPage() {
   const { serviceId } = useParams();
 
-  const [service, setService] = useState(null);
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [apiUnavailable, setApiUnavailable] = useState(false);
+  const { service, loading, error, unavailable: apiUnavailable, refetch: refetchService } = useService(serviceId);
+
+  const embeddedEvents = useMemo(
+    () => sortEventsAsc(normalizeEventList(service?.events)),
+    [service],
+  );
+
+  const fetchEventsSeparately = Boolean(
+    serviceId && service && !apiUnavailable && embeddedEvents.length === 0,
+  );
+
+  const {
+    events: fetchedEvents,
+    loading: eventsLoading,
+    refetch: refetchEvents,
+  } = useEvents(serviceId, { enabled: fetchEventsSeparately });
+
+  const events = fetchEventsSeparately ? fetchedEvents : embeddedEvents;
+  const displayLoading = loading || (fetchEventsSeparately && eventsLoading);
 
   const titleId = useMemo(
     () => `service-detail-${String(serviceId ?? "").replace(/[^a-zA-Z0-9_-]/g, "") || "id"}`,
@@ -56,86 +40,9 @@ export default function ServiceDetailPage() {
   );
 
   const reloadDetail = useCallback(async () => {
-    if (!serviceId) return;
-    try {
-      const svc = await getService(serviceId);
-      setService(svc);
-      let evs = normalizeEventList(svc?.events);
-      if (evs.length === 0) {
-        try {
-          const evData = await listServiceEvents(serviceId);
-          evs = normalizeEventList(evData);
-        } catch {
-          /* timeline opcional */
-        }
-      }
-      setEvents(sortEventsAsc(evs));
-    } catch {
-      /* el usuario ya ve errores en la carga inicial */
-    }
-  }, [serviceId]);
-
-  useEffect(() => {
-    if (!serviceId) {
-      setLoading(false);
-      return undefined;
-    }
-
-    const controller = new AbortController();
-
-    let cancelled = false;
-
-    async function load() {
-      setLoading(true);
-      setError(null);
-      setApiUnavailable(false);
-      setService(null);
-      setEvents([]);
-
-      try {
-        const svc = await getService(serviceId, { signal: controller.signal });
-        if (cancelled) return;
-
-        setService(svc);
-
-        let evs = normalizeEventList(svc?.events);
-        if (evs.length === 0) {
-          try {
-            const evData = await listServiceEvents(serviceId, { signal: controller.signal });
-            if (cancelled) return;
-            evs = normalizeEventList(evData);
-          } catch (e2) {
-            if (isCanceled(e2)) return;
-            const st = e2?.response?.status;
-            if (st !== 404 && st !== 405) {
-              /* opcional: ignorar error secundario de timeline */
-            }
-          }
-        }
-        if (cancelled) return;
-        setEvents(sortEventsAsc(evs));
-      } catch (e) {
-        if (isCanceled(e)) return;
-        const st = e?.response?.status;
-        if (st === 404 || st === 405) {
-          setApiUnavailable(true);
-        } else {
-          setError(formatDetail(e));
-        }
-      } finally {
-        if (!cancelled && !controller.signal.aborted) {
-          setLoading(false);
-        }
-      }
-    }
-
-    void load();
-
-    return () => {
-      cancelled = true;
-      controller.abort();
-    };
-  }, [serviceId]);
+    await refetchService();
+    await refetchEvents();
+  }, [refetchService, refetchEvents]);
 
   return (
     <div className={styles.page}>
@@ -156,7 +63,7 @@ export default function ServiceDetailPage() {
         ) : null}
       </header>
 
-      {loading ? (
+      {displayLoading ? (
         <div className={styles.loading}>
           <Spinner label="Cargando servicio" />
         </div>
@@ -182,7 +89,7 @@ export default function ServiceDetailPage() {
         </p>
       ) : null}
 
-      {!loading && service && !apiUnavailable ? (
+      {!displayLoading && service && !apiUnavailable ? (
         <>
           <Card title="Resumen" className={styles.cardMargin}>
             <dl className={styles.dl}>

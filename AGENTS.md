@@ -32,7 +32,7 @@ El comando **`/continuar`** (y seguir este `AGENTS.md` en orden) deja el context
 
 - **Backend hermano** (`progio-backend/`): auth **`/api/v1/auth/*`** (POC.2 ✓); catálogo **`GET /api/v1/contracts`**, **`/sites`**, **`/assets`** paginados (POC.3 ✓). Siguiente trabajo backend planificado: **POC.4** (servicios/eventos); **no** es prerequisito para seguir el frontend en modo demo incremental.
 - **Este repo:** `npm install`, `.env.example` → `.env`, `npm run dev`, login con seed del backend (`admin.general@…` + `SEED_DEMO_PASSWORD` si `SEED_EMAIL_DOMAIN=example.com`).
-- **Siguiente en este repo** (prioridad **demo navegable por slices**, ver `docs/DEVPLAN.md`): **POC.6.1** (**AQUÍ ESTAMOS** — `OperatorPanel` operario). Prefactura tras cierre (**POC.5.4** ✓). **[BACKEND]** POC.4 / POC.5 para datos reales del ciclo.
+- **Siguiente en este repo** (prioridad **demo navegable por slices**, ver `docs/DEVPLAN.md`): **POC.6.2** (**AQUÍ ESTAMOS** — botones táctiles ≥48 px). Panel operario **`/operator`** (**POC.6.1** ✓). **[BACKEND]** POC.4/5 para `GET /services` con `operator_id` en items o filtro server-side mejora «mis servicios».
 
 ## Cuándo aplicar
 

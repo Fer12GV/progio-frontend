@@ -46,7 +46,7 @@ El backend expone listados paginados: `GET /contracts`, `GET /sites`, `GET /asse
 
 | Método | Ruta | Descripción |
 |--------|------|-------------|
-| GET | `/services` | Listar (filtros: status, asset_id, contract_id, site_id, fechas) |
+| GET | `/services` | Listar (filtros: status, asset_id, contract_id, site_id, fechas). **Roadmap:** query `operator_id` / `assigned_to` para «mis servicios» server-side; la GUI (`OperatorPanelPage`) filtra en cliente con `getServiceOperatorId` hasta entonces. |
 | POST | `/services` | Crear (Pendiente) |
 | GET | `/services/{id}` | Detalle (incluye `events[]` y `prebill?`) |
 | POST | `/services/{id}/assign` | Asignar operador — body POC GUI: `{ "operator_id": "<uuid>" }` (validar contra schema real en **backend POC.4**) |

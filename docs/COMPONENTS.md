@@ -31,7 +31,11 @@ Este documento es la guía de los componentes a construir en el frontend, agrupa
 
 | Componente | Notas |
 |-----------|--------|
-| `AppLayout` | Shell con sidebar colapsable (desktop), drawer móvil (`matchMedia` ≤767px), `Outlet`, nav + **Salir**. |
+| `AppLayout` | Shell con sidebar colapsable (desktop), drawer móvil (`matchMedia` ≤767px), `Outlet`, nav + **Salir**; enlace **Panel operario** → `/operator` sólo si el rol incluye `operario` (**POC.6.1**). |
+
+## Páginas (`src/pages/`)
+
+- `OperatorPanelPage` — **POC.6.1** ✓ (`/operator`, `RoleGuard` en `App.jsx`): filtros estado + asignación, lista tarjetas hacia detalle de servicio.
 
 ## Auth (`src/components/auth/`)
 

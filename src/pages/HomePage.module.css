@@ -84,6 +84,18 @@
   line-height: 1.45;
 }
 
+.quickLink {
+  display: inline-block;
+  margin-top: 2px;
+  font-weight: 600;
+  color: var(--color-accent-2);
+  text-decoration: none;
+}
+
+.quickLink:hover {
+  text-decoration: underline;
+}
+
 .mono {
   font-size: 0.8rem;
   word-break: break-all;

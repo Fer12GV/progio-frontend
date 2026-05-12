@@ -11,6 +11,27 @@ export function formatApiDetail(err) {
   return err?.message ?? "Error al cargar datos";
 }
 
+/**
+ * Operador asignado al servicio (variantes típicas de API POC / futuro).
+ *
+ * @param {unknown} service
+ * @returns {string | null}
+ */
+export function getServiceOperatorId(service) {
+  if (!service || typeof service !== "object") return null;
+  const s = service;
+  const v =
+    s.operator_id ??
+    s.assigned_operator_id ??
+    s.operatorId ??
+    s.assigned_user_id ??
+    s.operator?.id ??
+    s.assigned_operator?.id;
+  if (v === undefined || v === null) return null;
+  const str = String(v).trim();
+  return str || null;
+}
+
 /** @param {unknown} raw */
 export function normalizeEventList(raw) {
   if (!raw) return [];

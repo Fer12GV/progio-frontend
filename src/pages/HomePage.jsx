@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 import Badge from "@/components/common/Badge.jsx";
 import Button from "@/components/common/Button.jsx";
@@ -66,6 +67,16 @@ export default function HomePage() {
           }
         >
           <dl className={styles.quickDl}>
+            <RoleGuard roles={["operario"]}>
+              <div className={styles.quickRow}>
+                <dt>Panel operario</dt>
+                <dd>
+                  <Link to="/operator" className={styles.quickLink}>
+                    Lista simplificada de mis servicios
+                  </Link>
+                </dd>
+              </div>
+            </RoleGuard>
             <div className={styles.quickRow}>
               <dt>Servicios</dt>
               <dd>

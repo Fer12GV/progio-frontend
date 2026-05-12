@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 
 import { useAuth } from "@/context/AuthContext.jsx";
+import { useRole } from "@/hooks/useRole.js";
 
 import styles from "./AppLayout.module.css";
 
@@ -9,6 +10,8 @@ const MQ_MOBILE = "(max-width: 767px)";
 
 export default function AppLayout() {
   const { user, logout } = useAuth();
+  const { hasAny } = useRole();
+  const showOperatorNav = hasAny(["operario"]);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -91,6 +94,20 @@ export default function AppLayout() {
             </span>
             <span className={styles.navLabel}>Inicio</span>
           </NavLink>
+          {showOperatorNav ? (
+            <NavLink
+              to="/operator"
+              className={({ isActive }) =>
+                isActive ? `${styles.navLink} ${styles.navLinkActive}` : styles.navLink
+              }
+              onClick={onNavigate}
+            >
+              <span className={styles.navIcon} aria-hidden>
+                ⚙️
+              </span>
+              <span className={styles.navLabel}>Panel operario</span>
+            </NavLink>
+          ) : null}
           <NavLink
             to="/services"
             className={({ isActive }) =>

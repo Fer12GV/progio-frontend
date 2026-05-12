@@ -8,9 +8,13 @@ WORKDIR /app
 # Build-time only (embedded in the bundle). Override via docker compose `build.args`.
 ARG VITE_API_BASE_URL=http://localhost:9001
 ARG VITE_API_PREFIX=/api/v1
+ARG VITE_SEED_EMAIL_DOMAIN=
+ARG VITE_LOGIN_EMAIL=
 
 ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
 ENV VITE_API_PREFIX=${VITE_API_PREFIX}
+ENV VITE_SEED_EMAIL_DOMAIN=${VITE_SEED_EMAIL_DOMAIN}
+ENV VITE_LOGIN_EMAIL=${VITE_LOGIN_EMAIL}
 
 COPY package.json package-lock.json ./
 RUN npm ci

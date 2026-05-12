@@ -16,13 +16,13 @@
 
 | Método | Ruta | Notas |
 |--------|------|-------|
-| POST | `/auth/login` | `{email, password}` → `{access_token, refresh_token, user: {id, email, full_name, tenant_id, roles[], is_active}}` |
+| POST | `/auth/login` | `{ email, password, tenant_slug? }` → tokens + `user`. `email` = correo **completo** (p. ej. seed `admin.general@example.com`). `tenant_slug` opcional (default en servidor, p. ej. `inverjam`). |
 | POST | `/auth/refresh` | `{refresh_token}` → mismos campos |
 | POST | `/auth/logout` | Invalida refresh en server |
 | GET | `/auth/me` | Perfil del usuario autenticado |
 | GET | `/auth/validate` | `{valid, user?, detail?}` para hidratar al cargar la app |
 
-**Usuarios seed (POC):** mismos correos y `SEED_DEMO_PASSWORD` que documenta el backend; patrón `{local}@{SEED_EMAIL_DOMAIN}` donde **`SEED_EMAIL_DOMAIN` es solo el dominio** (sin `@`, ej. `example.com`). Ver `progio-backend/memory/bug_seed_email_domain.md` si hay 422 en login.
+**Usuarios seed (POC):** el admin usa **`EMAIL_USERNAME`** en el backend (correo completo o local + `SEED_EMAIL_DOMAIN`); el resto son `{local}@{SEED_EMAIL_DOMAIN}`. Contraseña: **`SEED_DEMO_PASSWORD`** (sólo backend). En el frontend, **`VITE_LOGIN_EMAIL`** puede rellenar el correo en `/login`; **nunca** pongas la contraseña en `VITE_*` (el bundle es público). Ver `progio-backend/memory/bug_seed_email_domain.md` si hay 422 por dominio mal formado.
 
 **Errores típicos:** 401 (credenciales inválidas), 423 (cuenta bloqueada), 422 (payload inválido).
 
@@ -40,7 +40,7 @@
 
 El backend expone listados paginados: `GET /contracts`, `GET /sites`, `GET /assets` con `page` y `per_page`. Filtros opcionales: en `sites` → `contract_id`; en `assets` → `contract_id`, `vehicle_type`, `fuel_type`. Alta/edición/detalle por id aún no disponibles en API.
 
-**Frontend:** `src/api/contracts.js` (`listContracts`), `src/api/assets.js` (`listAssets`). `GET /sites` puede añadirse como `src/api/sites.js` cuando haga falta en UI.
+**Frontend:** `src/api/contracts.js` (`listContracts`), `src/api/assets.js` (`listAssets`), `src/api/users.js` (`listUsers` para modales de servicio). `GET /sites` puede añadirse como `src/api/sites.js` cuando haga falta en UI.
 
 ## Servicios + Eventos (núcleo)
 
@@ -49,11 +49,11 @@ El backend expone listados paginados: `GET /contracts`, `GET /sites`, `GET /asse
 | GET | `/services` | Listar (filtros: status, asset_id, contract_id, site_id, fechas) |
 | POST | `/services` | Crear (Pendiente) |
 | GET | `/services/{id}` | Detalle (incluye `events[]` y `prebill?`) |
-| POST | `/services/{id}/assign` | Asignar operador |
+| POST | `/services/{id}/assign` | Asignar operador — body POC GUI: `{ "operator_id": "<uuid>" }` (validar contra schema real en **backend POC.4**) |
 | POST | `/services/{id}/start` | Iniciar (Pendiente → En Proceso) |
 | POST | `/services/{id}/pause` | Pausar (En Proceso → En Espera) |
 | POST | `/services/{id}/resume` | Reanudar (En Espera → En Proceso) |
-| POST | `/services/{id}/inputs` | Registrar insumos |
+| POST | `/services/{id}/inputs` | Registrar insumos — body POC GUI: `{ "items": [{ "description", "quantity", "unit" }] }` (ajustar al contrato definitivo) |
 | POST | `/services/{id}/supervise` | Supervisión |
 | POST | `/services/{id}/close` | Cerrar (En Proceso → Finalizado, **requiere prefactura válida**) |
 | POST | `/services/{id}/cancel` | Cancelar |
@@ -61,7 +61,7 @@ El backend expone listados paginados: `GET /contracts`, `GET /sites`, `GET /asse
 | GET | `/services/{id}/events` | Eventos del servicio (read-only, inmutables) |
 | POST | `/services/{id}/events/sync` | **Sincronización offline** (lote con `client_event_id`) |
 
-**Frontend:** `src/api/services.js`, `src/api/events.js` (`listServiceEvents`, `syncServiceEvents`). UI: `ServicesPage` (lista), `ServiceDetailPage` + `components/services/EventTimeline.jsx` + **`components/services/ServiceActionBar.jsx`** (detalle + eventos + acciones por estado/RBAC).
+**Frontend:** `src/api/services.js`, `src/api/events.js`, `src/api/users.js` (`listUsers`). UI: `ServicesPage` (lista), `ServiceDetailPage` + `EventTimeline.jsx` + `ServiceActionBar.jsx` + modales (`AssignOperatorModal`, `RegisterInputsModal`, `CancelModal`, `ReprocessModal`) + `common/Modal.jsx`.
 
 **Errores típicos:**
 

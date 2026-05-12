@@ -1,0 +1,94 @@
+.field {
+  margin-bottom: calc(var(--space) * 1.25);
+}
+
+.field:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.select,
+.textarea,
+.textInput {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #0b1224;
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: 0.92rem;
+}
+
+.textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.hint {
+  margin: 0 0 var(--space);
+  font-size: 0.85rem;
+}
+
+.error {
+  margin: var(--space) 0 0;
+  font-size: 0.85rem;
+  color: var(--color-danger);
+}
+
+.code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.82em;
+}
+
+.lineRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px;
+  margin-bottom: calc(var(--space) * 1.25);
+  padding-bottom: calc(var(--space) * 1.25);
+  border-bottom: 1px solid #1e293b;
+}
+
+.lineRow:last-of-type {
+  border-bottom: none;
+}
+
+.descGrow {
+  flex: 1 1 180px;
+  min-width: 140px;
+}
+
+.qnarrow {
+  flex: 0 0 88px;
+}
+
+.unarrow {
+  flex: 0 0 80px;
+}
+
+.rmCell {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+}
+
+.linkBtn {
+  margin-top: 8px;
+  background: none;
+  border: none;
+  color: var(--color-accent-2);
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  width: auto;
+  min-height: auto;
+  font: inherit;
+}

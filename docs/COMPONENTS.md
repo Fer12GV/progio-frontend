@@ -16,7 +16,7 @@ Este documento es la guía de los componentes a construir en el frontend, agrupa
 |-----------|-------------|-------|
 | `Button` | `variant`, `size`, `loading`, `disabled`, `onClick` | Variantes: `primary`, `secondary`, `danger`, `ghost`, `link` |
 | `Card` | `title`, `actions`, `children` | Estructura base de tarjetas |
-| `Modal` | `isOpen`, `onClose`, `title`, `size` | Focus trap + cerrar con ESC |
+| `Modal` | `open`, `onClose`, `title`, `children`, `footer?` | Portal a `document.body`, Escape y clic fuera cierran (**implementado** `Modal.jsx`) |
 | `Spinner` | `size`, `color` | Para loading states |
 | `Toast` | hook `useToast()` | Sistema centralizado |
 | `Alert` | `variant`, `dismissible` | Info / success / warning / error |
@@ -53,11 +53,12 @@ Este documento es la guía de los componentes a construir en el frontend, agrupa
 - `ServiceFilters` — fecha, estado, contrato, asset, operador.
 - `EventTimeline` — línea de tiempo read-only de eventos del servicio.
 - `StateBadge` — badge con color por estado (Pendiente, En Proceso, En Espera, Finalizado, Cancelado, Reprocesado, Bloqueado).
-- `ServiceActionBar` — botones de acción según estado + RBAC.
-- `AssignOperatorModal` — asignar operador.
-- `RegisterInputsModal` — registrar insumos (volumen, costes).
+- `ServiceActionBar` — botones de acción según estado + RBAC; abre modales asignación / insumos / cancel / reproceso (**implementado**).
+- `AssignOperatorModal` — asignar operador (`listUsers` + UUID manual; body `operator_id` — alinear con backend POC.4).
+- `RegisterInputsModal` — registrar insumos (líneas descripción/cantidad/unidad; body `items[]` — alinear schema con backend).
+- `CancelModal` — cancelar con motivo opcional.
 - `SupervisionModal` — registrar supervisión.
-- `ReprocessModal` — reproceso con motivo obligatorio.
+- `ReprocessModal` — reproceso con motivo obligatorio (**implementado**).
 - `CloseServiceConfirm` — confirma cierre tras validar prefactura.
 
 ## Activos (`src/components/assets/`)

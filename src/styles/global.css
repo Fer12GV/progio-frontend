@@ -96,6 +96,36 @@ button:disabled {
   margin: 0 0 var(--space);
 }
 
+.login-hint {
+  margin-bottom: var(--space);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.login-hint summary {
+  cursor: pointer;
+  color: var(--color-text);
+  margin-bottom: 0.35rem;
+}
+
+.login-hint p {
+  margin: 0.4rem 0;
+}
+
+.login-hint code {
+  font-size: 0.8em;
+  word-break: break-all;
+}
+
+.login-hint-list {
+  margin: 0.35rem 0 0;
+  padding-left: 1.2rem;
+}
+
+.login-hint-tip {
+  margin-top: 0.35rem;
+}
+
 .topbar {
   display: flex;
   align-items: center;

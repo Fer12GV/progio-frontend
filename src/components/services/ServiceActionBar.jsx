@@ -4,13 +4,16 @@ import Button from "@/components/common/Button.jsx";
 import { useToast } from "@/hooks/useToast.js";
 import { useRole } from "@/hooks/useRole.js";
 import {
-  cancelService,
   closeService,
   pauseService,
   resumeService,
   startService,
 } from "@/api/services.js";
 import { getCanonicalServiceStatus } from "@/utils/serviceState.js";
+import AssignOperatorModal from "@/components/services/AssignOperatorModal.jsx";
+import CancelModal from "@/components/services/CancelModal.jsx";
+import RegisterInputsModal from "@/components/services/RegisterInputsModal.jsx";
+import ReprocessModal from "@/components/services/ReprocessModal.jsx";
 
 import styles from "./ServiceActionBar.module.css";
 
@@ -34,6 +37,9 @@ export default function ServiceActionBar({ serviceId, service, onAfterMutation }
   const { pushToast } = useToast();
   const { hasAny } = useRole();
   const [busyKey, setBusyKey] = useState(null);
+  const [dialog, setDialog] = useState(null);
+  /** @type {'cancel' | 'cancelSvc' | 'cancelHold'} */
+  const [cancelBusyKey, setCancelBusyKey] = useState("cancel");
 
   const canonical = getCanonicalServiceStatus(service);
 
@@ -62,8 +68,10 @@ export default function ServiceActionBar({ serviceId, service, onAfterMutation }
         await fn();
         pushToast("Operación registrada correctamente.", "success");
         await onAfterMutation?.();
+        return true;
       } catch (err) {
         pushToast(formatApiError(err), "danger");
+        return false;
       } finally {
         setBusyKey(null);
       }
@@ -73,10 +81,15 @@ export default function ServiceActionBar({ serviceId, service, onAfterMutation }
 
   const onPlaceholder = useCallback(
     (label) => () => {
-      pushToast(`${label}: modal en POC.4.5.`, "info");
+      pushToast(`${label}: modal en fase posterior.`, "info");
     },
     [pushToast],
   );
+
+  const openCancel = useCallback((key) => {
+    setCancelBusyKey(key);
+    setDialog("cancel");
+  }, []);
 
   if (hasAny(["interventor"])) {
     return (
@@ -100,7 +113,7 @@ export default function ServiceActionBar({ serviceId, service, onAfterMutation }
       nodes.push(
         btn(
           "assign",
-          <Button variant="secondary" size="sm" onClick={onPlaceholder("Asignar operador")}>
+          <Button variant="secondary" size="sm" onClick={() => setDialog("assign")}>
             Asignar operador
           </Button>,
         ),
@@ -114,7 +127,7 @@ export default function ServiceActionBar({ serviceId, service, onAfterMutation }
             variant="primary"
             size="sm"
             loading={busyKey === "start"}
-            onClick={() => run("start", () => startService(serviceId))}
+            onClick={() => void run("start", () => startService(serviceId))}
           >
             Iniciar
           </Button>,
@@ -125,18 +138,7 @@ export default function ServiceActionBar({ serviceId, service, onAfterMutation }
       nodes.push(
         btn(
           "cancel",
-          <Button
-            variant="danger"
-            size="sm"
-            loading={busyKey === "cancel"}
-            onClick={() => {
-              const reason = window.prompt("Motivo de cancelación (opcional):");
-              if (reason === null) return;
-              void run("cancel", () =>
-                cancelService(serviceId, reason.trim() ? { reason: reason.trim() } : {}),
-              );
-            }}
-          >
+          <Button variant="danger" size="sm" loading={busyKey === "cancel"} onClick={() => openCancel("cancel")}>
             Cancelar
           </Button>,
         ),
@@ -153,7 +155,7 @@ export default function ServiceActionBar({ serviceId, service, onAfterMutation }
             variant="secondary"
             size="sm"
             loading={busyKey === "pause"}
-            onClick={() => run("pause", () => pauseService(serviceId, {}))}
+            onClick={() => void run("pause", () => pauseService(serviceId, {}))}
           >
             Pausar
           </Button>,
@@ -162,7 +164,7 @@ export default function ServiceActionBar({ serviceId, service, onAfterMutation }
       nodes.push(
         btn(
           "inputs",
-          <Button variant="secondary" size="sm" onClick={onPlaceholder("Registrar insumos")}>
+          <Button variant="secondary" size="sm" onClick={() => setDialog("inputs")}>
             Insumos
           </Button>,
         ),
@@ -186,7 +188,7 @@ export default function ServiceActionBar({ serviceId, service, onAfterMutation }
             variant="primary"
             size="sm"
             loading={busyKey === "close"}
-            onClick={() => run("close", () => closeService(serviceId))}
+            onClick={() => void run("close", () => closeService(serviceId))}
           >
             Cerrar
           </Button>,
@@ -197,18 +199,7 @@ export default function ServiceActionBar({ serviceId, service, onAfterMutation }
       nodes.push(
         btn(
           "cancelSvc",
-          <Button
-            variant="danger"
-            size="sm"
-            loading={busyKey === "cancelSvc"}
-            onClick={() => {
-              const reason = window.prompt("Motivo de cancelación (opcional):");
-              if (reason === null) return;
-              void run("cancelSvc", () =>
-                cancelService(serviceId, reason.trim() ? { reason: reason.trim() } : {}),
-              );
-            }}
-          >
+          <Button variant="danger" size="sm" loading={busyKey === "cancelSvc"} onClick={() => openCancel("cancelSvc")}>
             Cancelar servicio
           </Button>,
         ),
@@ -225,7 +216,7 @@ export default function ServiceActionBar({ serviceId, service, onAfterMutation }
             variant="primary"
             size="sm"
             loading={busyKey === "resume"}
-            onClick={() => run("resume", () => resumeService(serviceId))}
+            onClick={() => void run("resume", () => resumeService(serviceId))}
           >
             Reanudar
           </Button>,
@@ -236,18 +227,7 @@ export default function ServiceActionBar({ serviceId, service, onAfterMutation }
       nodes.push(
         btn(
           "cancelHold",
-          <Button
-            variant="danger"
-            size="sm"
-            loading={busyKey === "cancelHold"}
-            onClick={() => {
-              const reason = window.prompt("Motivo de cancelación (opcional):");
-              if (reason === null) return;
-              void run("cancelHold", () =>
-                cancelService(serviceId, reason.trim() ? { reason: reason.trim() } : {}),
-              );
-            }}
-          >
+          <Button variant="danger" size="sm" loading={busyKey === "cancelHold"} onClick={() => openCancel("cancelHold")}>
             Cancelar
           </Button>,
         ),
@@ -260,7 +240,7 @@ export default function ServiceActionBar({ serviceId, service, onAfterMutation }
       nodes.push(
         btn(
           "reprocess",
-          <Button variant="secondary" size="sm" onClick={onPlaceholder("Reproceso")}>
+          <Button variant="secondary" size="sm" onClick={() => setDialog("reprocess")}>
             Reproceso
           </Button>,
         ),
@@ -337,8 +317,36 @@ export default function ServiceActionBar({ serviceId, service, onAfterMutation }
   }
 
   return (
-    <div className={styles.bar} role="region" aria-label="Acciones del servicio">
-      <div className={styles.actions}>{nodes}</div>
-    </div>
+    <>
+      <div className={styles.bar} role="region" aria-label="Acciones del servicio">
+        <div className={styles.actions}>{nodes}</div>
+      </div>
+
+      <AssignOperatorModal
+        open={dialog === "assign"}
+        onClose={() => setDialog(null)}
+        serviceId={serviceId}
+        runMutation={run}
+      />
+      <RegisterInputsModal
+        open={dialog === "inputs"}
+        onClose={() => setDialog(null)}
+        serviceId={serviceId}
+        runMutation={run}
+      />
+      <CancelModal
+        open={dialog === "cancel"}
+        onClose={() => setDialog(null)}
+        serviceId={serviceId}
+        busyKey={cancelBusyKey}
+        runMutation={run}
+      />
+      <ReprocessModal
+        open={dialog === "reprocess"}
+        onClose={() => setDialog(null)}
+        serviceId={serviceId}
+        runMutation={run}
+      />
+    </>
   );
 }

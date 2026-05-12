@@ -26,7 +26,7 @@ function formatApiError(err) {
 }
 
 /**
- * Acciones mutadoras según estado del servicio + RBAC (eventos inmutables).
+ * Acciones mutadoras según estado del servicio + RBAC (eventos inmutables). Con rol `operario`, barra en modo táctil (POC.6.2): botones ≥48px y ancho completo.
  *
  * @param {{
  *   serviceId: string,
@@ -78,6 +78,7 @@ export default function ServiceActionBar({
     "admin_contrato",
     "coordinador_operaciones",
   ]);
+  const operarioTouch = hasAny(["operario"]);
 
   const run = useCallback(
     async (key, fn) => {
@@ -346,9 +347,11 @@ export default function ServiceActionBar({
     );
   }
 
+  const barClass = [styles.bar, operarioTouch ? styles.barTouch : ""].filter(Boolean).join(" ");
+
   if (nodes.length === 0) {
     return (
-      <div className={styles.bar} role="region" aria-label="Acciones del servicio">
+      <div className={barClass} role="region" aria-label="Acciones del servicio">
         <p className={`muted ${styles.readOnly}`}>No hay acciones para este estado y rol.</p>
       </div>
     );
@@ -356,7 +359,7 @@ export default function ServiceActionBar({
 
   return (
     <>
-      <div className={styles.bar} role="region" aria-label="Acciones del servicio">
+      <div className={barClass} role="region" aria-label="Acciones del servicio">
         <div className={styles.actions}>{nodes}</div>
       </div>
 

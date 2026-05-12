@@ -65,6 +65,7 @@
   text-decoration: none;
   color: inherit;
   transition: border-color 0.15s ease, background 0.15s ease;
+  touch-action: manipulation;
 }
 
 .row:hover {

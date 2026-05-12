@@ -31,11 +31,11 @@ Este documento es la guía de los componentes a construir en el frontend, agrupa
 
 | Componente | Notas |
 |-----------|--------|
-| `AppLayout` | Shell con sidebar colapsable (desktop), drawer móvil (`matchMedia` ≤767px), `Outlet`, nav + **Salir**; enlace **Panel operario** → `/operator` sólo si el rol incluye `operario` (**POC.6.1**). |
+| `AppLayout` | Shell con sidebar colapsable (desktop), drawer móvil (`matchMedia` ≤767px), `Outlet`, nav + **Salir**; enlace **Panel operario** → `/operator` sólo si el rol incluye `operario` (**POC.6.1**). Móvil (**POC.6.3** ✓): `100dvh` + scroll en `#main-content` (`-webkit-overflow-scrolling: touch`, `overscroll-behavior-y: contain`, cadena flex `min-height: 0`). |
 
 ## Páginas (`src/pages/`)
 
-- `OperatorPanelPage` — **POC.6.1** ✓ (`/operator`, `RoleGuard` en `App.jsx`): filtros estado + asignación, lista tarjetas hacia detalle de servicio.
+- `OperatorPanelPage` — **POC.6.1** ✓ (`/operator`, `RoleGuard` en `App.jsx`): filtros estado + asignación, lista tarjetas hacia detalle de servicio; filas con `touch-action: manipulation` (**POC.6.3**).
 
 ## Auth (`src/components/auth/`)
 
@@ -57,7 +57,7 @@ Este documento es la guía de los componentes a construir en el frontend, agrupa
 - `ServiceFilters` — fecha, estado, contrato, asset, operador.
 - `EventTimeline` — línea de tiempo read-only de eventos del servicio.
 - `StateBadge` — badge con color por estado (Pendiente, En Proceso, En Espera, Finalizado, Cancelado, Reprocesado, Bloqueado).
-- `ServiceActionBar` — acciones por estado + RBAC + modales + bloqueo cierre + `onAfterCloseSuccess`; **modo táctil** (`barTouch`) si el usuario tiene rol `operario` — botones ≥48px, columna ancha (**POC.6.2** ✓).
+- `ServiceActionBar` — acciones por estado + RBAC + modales + bloqueo cierre + `onAfterCloseSuccess`; **modo táctil** (`barTouch`) si el usuario tiene rol `operario` — botones ≥48px, columna ancha, `touch-action: manipulation` (**POC.6.2** ✓ + **POC.6.3**).
 - `AssignOperatorModal` — asignar operador (`listUsers` + UUID manual; body `operator_id` — alinear con backend POC.4).
 - `RegisterInputsModal` — registrar insumos (líneas descripción/cantidad/unidad; body `items[]` — alinear schema con backend).
 - `CancelModal` — cancelar con motivo opcional.
@@ -89,7 +89,7 @@ Este documento es la guía de los componentes a construir en el frontend, agrupa
 
 - **API:** `src/api/prebills.js` (**POC.5.1** ✓) — `getPrebillByService`, `getPrebill`, `listPrebills`, `retryPrebillSiigo`.
 - **Hook:** `src/hooks/usePrebillByService.js` (**POC.5.2** ✓) — carga con `AbortController`, `refetch` tras mutaciones.
-- `PrebillView` (**POC.5.2** ✓) — estado, cliente, activo, tabla de líneas, total (importes ocultos a `operario`).
+- `PrebillView` (**POC.5.2** ✓) — estado, cliente, activo, tabla de líneas, total (importes ocultos a `operario`); `.tableWrap` con scroll horizontal táctil (**POC.6.3**).
 - `PostClosePrebillModal` (**POC.5.4** ✓) — modal ancho tras **Cerrar** OK; reutiliza `PrebillView` con datos ya refrescados por `reloadDetail`.
 - `PrebillItemList` — items con cantidad, costo unitario (visible según rol).
 - `Totals` — total de la prefactura (visible según rol).

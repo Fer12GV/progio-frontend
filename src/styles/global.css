@@ -8,6 +8,16 @@ body {
   background: radial-gradient(circle at 20% 20%, #134e4a, var(--color-bg));
   color: var(--color-text);
   min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* POC.6.3 — menos retardo táctil en enlaces/botones (sin afectar gestos de scroll). */
+a,
+button,
+[role="button"],
+select,
+summary {
+  touch-action: manipulation;
 }
 
 h1 {

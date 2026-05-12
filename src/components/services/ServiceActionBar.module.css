@@ -37,6 +37,7 @@
   padding: 14px 20px;
   font-size: 1rem;
   justify-content: center;
+  touch-action: manipulation;
 }
 
 .readOnly {

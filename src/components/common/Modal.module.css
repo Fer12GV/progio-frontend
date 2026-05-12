@@ -21,6 +21,10 @@
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
 }
 
+.panelWide {
+  width: min(720px, 100%);
+}
+
 .header {
   display: flex;
   align-items: flex-start;

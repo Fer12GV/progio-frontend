@@ -1,0 +1,9 @@
+.intro {
+  margin: 0 0 calc(var(--space) * 1.25);
+  font-size: 0.92rem;
+}
+
+.prebill {
+  max-height: min(50vh, 22rem);
+  overflow-y: auto;
+}

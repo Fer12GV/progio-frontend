@@ -35,6 +35,7 @@ function formatApiError(err) {
  *   prebill?: Record<string, unknown> | null,
  *   prebillLoading?: boolean,
  *   prebillError?: string | null,
+ *   onAfterCloseSuccess?: () => void,
  * }} props
  */
 export default function ServiceActionBar({
@@ -44,6 +45,7 @@ export default function ServiceActionBar({
   prebill = null,
   prebillLoading = false,
   prebillError = null,
+  onAfterCloseSuccess,
 }) {
   const { pushToast } = useToast();
   const { hasAny } = useRole();
@@ -106,6 +108,11 @@ export default function ServiceActionBar({
     setCancelBusyKey(key);
     setDialog("cancel");
   }, []);
+
+  const handleCloseService = useCallback(async () => {
+    const ok = await run("close", () => closeService(serviceId));
+    if (ok) onAfterCloseSuccess?.();
+  }, [run, serviceId, onAfterCloseSuccess]);
 
   if (hasAny(["interventor"])) {
     return (
@@ -219,7 +226,7 @@ export default function ServiceActionBar({
             loading={busyKey === "close"}
             disabled={closeGuard.blocked}
             title={closeGuard.blocked ? closeGuard.summary : undefined}
-            onClick={() => void run("close", () => closeService(serviceId))}
+            onClick={() => void handleCloseService()}
           >
             Cerrar
           </Button>,

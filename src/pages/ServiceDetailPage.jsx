@@ -1,8 +1,9 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import Card from "@/components/common/Card.jsx";
 import Spinner from "@/components/common/Spinner.jsx";
+import PostClosePrebillModal from "@/components/prebill/PostClosePrebillModal.jsx";
 import PrebillView from "@/components/prebill/PrebillView.jsx";
 import EventTimeline from "@/components/services/EventTimeline.jsx";
 import ServiceActionBar from "@/components/services/ServiceActionBar.jsx";
@@ -15,6 +16,7 @@ import styles from "./ServiceDetailPage.module.css";
 
 export default function ServiceDetailPage() {
   const { serviceId } = useParams();
+  const [postClosePrebillOpen, setPostClosePrebillOpen] = useState(false);
 
   const { service, loading, error, unavailable: apiUnavailable, refetch: refetchService } = useService(serviceId);
 
@@ -52,6 +54,14 @@ export default function ServiceDetailPage() {
   const reloadDetail = useCallback(async () => {
     await Promise.all([refetchService(), refetchEvents(), refetchPrebill()]);
   }, [refetchService, refetchEvents, refetchPrebill]);
+
+  const onPostCloseSuccess = useCallback(() => {
+    setPostClosePrebillOpen(true);
+  }, []);
+
+  useEffect(() => {
+    setPostClosePrebillOpen(false);
+  }, [serviceId]);
 
   return (
     <div className={styles.page}>
@@ -140,6 +150,7 @@ export default function ServiceDetailPage() {
               prebillLoading={prebillLoading}
               prebillError={prebillError}
               onAfterMutation={reloadDetail}
+              onAfterCloseSuccess={onPostCloseSuccess}
             />
           </Card>
 
@@ -150,6 +161,15 @@ export default function ServiceDetailPage() {
             </p>
             <EventTimeline events={events} aria-label="Eventos del servicio" />
           </Card>
+
+          <PostClosePrebillModal
+            open={postClosePrebillOpen}
+            onClose={() => setPostClosePrebillOpen(false)}
+            prebill={prebill}
+            service={service}
+            prebillLoading={prebillLoading}
+            prebillError={prebillError}
+          />
         </>
       ) : null}
     </div>

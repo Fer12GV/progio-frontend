@@ -12,9 +12,10 @@ import styles from "./Modal.module.css";
  *   onClose: () => void,
  *   children: import('react').ReactNode,
  *   footer?: import('react').ReactNode,
+ *   size?: 'default' | 'wide',
  * }} props
  */
-export default function Modal({ open, title, onClose, children, footer }) {
+export default function Modal({ open, title, onClose, children, footer, size = "default" }) {
   const titleId = useId();
 
   useEffect(() => {
@@ -46,7 +47,7 @@ export default function Modal({ open, title, onClose, children, footer }) {
       }}
     >
       <div
-        className={styles.panel}
+        className={[styles.panel, size === "wide" ? styles.panelWide : ""].filter(Boolean).join(" ")}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}

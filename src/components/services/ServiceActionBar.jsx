@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import Button from "@/components/common/Button.jsx";
 import { useToast } from "@/hooks/useToast.js";
@@ -9,6 +9,7 @@ import {
   resumeService,
   startService,
 } from "@/api/services.js";
+import { describePrebillCloseBlock } from "@/utils/prebillCloseGuard.js";
 import { getCanonicalServiceStatus } from "@/utils/serviceState.js";
 import AssignOperatorModal from "@/components/services/AssignOperatorModal.jsx";
 import CancelModal from "@/components/services/CancelModal.jsx";
@@ -31,9 +32,19 @@ function formatApiError(err) {
  *   serviceId: string,
  *   service: Record<string, unknown>,
  *   onAfterMutation?: () => void | Promise<void>,
+ *   prebill?: Record<string, unknown> | null,
+ *   prebillLoading?: boolean,
+ *   prebillError?: string | null,
  * }} props
  */
-export default function ServiceActionBar({ serviceId, service, onAfterMutation }) {
+export default function ServiceActionBar({
+  serviceId,
+  service,
+  onAfterMutation,
+  prebill = null,
+  prebillLoading = false,
+  prebillError = null,
+}) {
   const { pushToast } = useToast();
   const { hasAny } = useRole();
   const [busyKey, setBusyKey] = useState(null);
@@ -42,6 +53,11 @@ export default function ServiceActionBar({ serviceId, service, onAfterMutation }
   const [cancelBusyKey, setCancelBusyKey] = useState("cancel");
 
   const canonical = getCanonicalServiceStatus(service);
+
+  const closeGuard = useMemo(
+    () => describePrebillCloseBlock(prebill, service, { prebillLoading, prebillError }),
+    [prebill, service, prebillLoading, prebillError],
+  );
 
   const operativo = hasAny([
     "operario",
@@ -181,6 +197,19 @@ export default function ServiceActionBar({ serviceId, service, onAfterMutation }
       );
     }
     if (operativo) {
+      if (closeGuard.blocked) {
+        nodes.push(
+          <div
+            key="closeHint"
+            id="service-close-prebill-hint"
+            className={styles.closeHint}
+            role="status"
+          >
+            <strong className={styles.closeHintTitle}>{closeGuard.summary}</strong>
+            <p className={styles.closeHintDetail}>{closeGuard.detail}</p>
+          </div>,
+        );
+      }
       nodes.push(
         btn(
           "close",
@@ -188,6 +217,8 @@ export default function ServiceActionBar({ serviceId, service, onAfterMutation }
             variant="primary"
             size="sm"
             loading={busyKey === "close"}
+            disabled={closeGuard.blocked}
+            title={closeGuard.blocked ? closeGuard.summary : undefined}
             onClick={() => void run("close", () => closeService(serviceId))}
           >
             Cerrar

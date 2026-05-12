@@ -3,9 +3,11 @@ import { Link, useParams } from "react-router-dom";
 
 import Card from "@/components/common/Card.jsx";
 import Spinner from "@/components/common/Spinner.jsx";
+import PrebillView from "@/components/prebill/PrebillView.jsx";
 import EventTimeline from "@/components/services/EventTimeline.jsx";
 import ServiceActionBar from "@/components/services/ServiceActionBar.jsx";
 import { useEvents } from "@/hooks/useEvents.js";
+import { usePrebillByService } from "@/hooks/usePrebillByService.js";
 import { useService } from "@/hooks/useService.js";
 import { normalizeEventList, sortEventsAsc } from "@/utils/serviceApiHelpers.js";
 
@@ -31,6 +33,14 @@ export default function ServiceDetailPage() {
     refetch: refetchEvents,
   } = useEvents(serviceId, { enabled: fetchEventsSeparately });
 
+  const prebillEnabled = Boolean(serviceId && service && !apiUnavailable);
+  const {
+    prebill,
+    loading: prebillLoading,
+    error: prebillError,
+    refetch: refetchPrebill,
+  } = usePrebillByService(serviceId, { enabled: prebillEnabled });
+
   const events = fetchEventsSeparately ? fetchedEvents : embeddedEvents;
   const displayLoading = loading || (fetchEventsSeparately && eventsLoading);
 
@@ -40,9 +50,8 @@ export default function ServiceDetailPage() {
   );
 
   const reloadDetail = useCallback(async () => {
-    await refetchService();
-    await refetchEvents();
-  }, [refetchService, refetchEvents]);
+    await Promise.all([refetchService(), refetchEvents(), refetchPrebill()]);
+  }, [refetchService, refetchEvents, refetchPrebill]);
 
   return (
     <div className={styles.page}>
@@ -114,8 +123,24 @@ export default function ServiceDetailPage() {
             </dl>
           </Card>
 
+          <Card title="Prefactura" className={styles.cardMargin}>
+            <PrebillView
+              prebill={prebill}
+              service={service}
+              loading={prebillLoading}
+              error={prebillError}
+            />
+          </Card>
+
           <Card title="Acciones" className={styles.cardMargin}>
-            <ServiceActionBar serviceId={serviceId} service={service} onAfterMutation={reloadDetail} />
+            <ServiceActionBar
+              serviceId={serviceId}
+              service={service}
+              prebill={prebill}
+              prebillLoading={prebillLoading}
+              prebillError={prebillError}
+              onAfterMutation={reloadDetail}
+            />
           </Card>
 
           <Card title="Eventos" className={styles.cardMargin}>

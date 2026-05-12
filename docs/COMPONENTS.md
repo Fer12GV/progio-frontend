@@ -53,7 +53,7 @@ Este documento es la guía de los componentes a construir en el frontend, agrupa
 - `ServiceFilters` — fecha, estado, contrato, asset, operador.
 - `EventTimeline` — línea de tiempo read-only de eventos del servicio.
 - `StateBadge` — badge con color por estado (Pendiente, En Proceso, En Espera, Finalizado, Cancelado, Reprocesado, Bloqueado).
-- `ServiceActionBar` — botones de acción según estado + RBAC; abre modales asignación / insumos / cancel / reproceso (**implementado**).
+- `ServiceActionBar` — botones de acción según estado + RBAC; modales asignación / insumos / cancel / reproceso; en **En proceso** bloquea **Cerrar** hasta prefactura `valid` (`prebillCloseGuard`, props `prebill*` desde detalle).
 - `AssignOperatorModal` — asignar operador (`listUsers` + UUID manual; body `operator_id` — alinear con backend POC.4).
 - `RegisterInputsModal` — registrar insumos (líneas descripción/cantidad/unidad; body `items[]` — alinear schema con backend).
 - `CancelModal` — cancelar con motivo opcional.
@@ -83,7 +83,9 @@ Este documento es la guía de los componentes a construir en el frontend, agrupa
 
 ## Prefacturación (`src/components/prebill/`)
 
-- `PrebillView` — vista detallada de la prefactura asociada al servicio.
+- **API:** `src/api/prebills.js` (**POC.5.1** ✓) — `getPrebillByService`, `getPrebill`, `listPrebills`, `retryPrebillSiigo`.
+- **Hook:** `src/hooks/usePrebillByService.js` (**POC.5.2** ✓) — carga con `AbortController`, `refetch` tras mutaciones.
+- `PrebillView` (**POC.5.2** ✓) — estado, cliente, activo, tabla de líneas, total (importes ocultos a `operario`).
 - `PrebillItemList` — items con cantidad, costo unitario (visible según rol).
 - `Totals` — total de la prefactura (visible según rol).
 - `RetrySiigoButton` — admin only.

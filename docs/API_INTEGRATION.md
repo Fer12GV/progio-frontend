@@ -73,9 +73,12 @@ El backend expone listados paginados: `GET /contracts`, `GET /sites`, `GET /asse
 
 | Método | Ruta | Descripción |
 |--------|------|-------------|
+| GET | `/services/{id}/prebill` | Prefactura del servicio (si el backend la expone; p. ej. POC.5); si no existe, la GUI usa `GET /services/{id}` + `GET /prebills/{prebill_id}` vía `getPrebillByService` |
 | GET | `/prebills` | Listar |
 | GET | `/prebills/{id}` | Detalle |
 | POST | `/prebills/{id}/retry-siigo` | Reintento manual (admin) |
+
+**Frontend:** `src/api/prebills.js` — `listPrebills`, `getPrebill`, **`getPrebillByService(serviceId)`**, `retryPrebillSiigo`.
 
 ## Auditoría (read-only)
 

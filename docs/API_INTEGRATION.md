@@ -55,13 +55,14 @@ El backend expone listados paginados: `GET /contracts`, `GET /sites`, `GET /asse
 | POST | `/services/{id}/resume` | Reanudar (En Espera → En Proceso). **409** si no está en `en_espera`. |
 | POST | `/services/{id}/inputs` | Registrar insumos — body POC GUI: `{ "items": [{ "description", "quantity", "unit" }] }` (ajustar al contrato definitivo) |
 | POST | `/services/{id}/supervise` | Supervisión |
-| POST | `/services/{id}/close` | Cerrar (En Proceso → Finalizado, **requiere prefactura válida**) |
+| POST | `/services/{id}/close` | Cerrar (En Proceso → Finalizado). **POC.5 backend:** genera prefactura mock si faltaba; no Siigo real. |
 | POST | `/services/{id}/cancel` | Cancelar |
 | POST | `/services/{id}/reprocess` | Reproceso (con motivo obligatorio) |
 | GET | `/services/{id}/events` | Eventos del servicio (read-only, inmutables) |
+| GET | `/services/{id}/prebill` | Prefactura (`items`, `total`, `status=valid`); el backend la crea si aplica (ver `getPrebillByService`). |
 | POST | `/services/{id}/events/sync` | **Sincronización offline** (lote con `client_event_id`) |
 
-**Estado API (2026-05-12):** el backend ya expone estas rutas (prefijo `/api/v1` en `VITE_API_PREFIX`). **`close`** puede responder **422** mientras no exista **`prebill_id`** en servidor (**POC.5** backend). Cuerpos **`inputs`** / **`supervise`**: JSON flexible según OpenAPI.
+**Estado API (2026-05-12):** el backend ya expone estas rutas (prefijo `/api/v1` en `VITE_API_PREFIX`). **`GET /services/{id}/prebill`** y **`POST .../close`** persisten prefactura POC si faltaba (`PREBILL_BASE_RATE_COP` en backend). Cuerpos **`inputs`** / **`supervise`**: JSON flexible según OpenAPI.
 
 **Frontend:** `src/api/services.js`, `src/api/events.js`, `src/api/users.js` (`listUsers`). Hooks: `useServices`, `useService`, `useEvents`. UI: `ServicesPage`, `ServiceDetailPage` + `EventTimeline.jsx` + `ServiceActionBar.jsx` + modales (`AssignOperatorModal`, `RegisterInputsModal`, `CancelModal`, `ReprocessModal`) + `common/Modal.jsx`.
 
@@ -75,7 +76,7 @@ El backend expone listados paginados: `GET /contracts`, `GET /sites`, `GET /asse
 
 | Método | Ruta | Descripción |
 |--------|------|-------------|
-| GET | `/services/{id}/prebill` | Prefactura del servicio (si el backend la expone; p. ej. POC.5); si no existe, la GUI usa `GET /services/{id}` + `GET /prebills/{prebill_id}` vía `getPrebillByService` |
+| GET | `/services/{id}/prebill` | Misma prefactura que expone el backend POC.5; fallback `GET /services/{id}` + `GET /prebills/{id}` en `getPrebillByService` |
 | GET | `/prebills` | Listar |
 | GET | `/prebills/{id}` | Detalle |
 | POST | `/prebills/{id}/retry-siigo` | Reintento manual (admin) |

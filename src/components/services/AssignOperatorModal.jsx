@@ -108,7 +108,7 @@ export default function AssignOperatorModal({ open, onClose, serviceId, runMutat
 
     setSubmitting(true);
     try {
-      const body = { operator_id: id };
+      const body = { assigned_user_id: id };
       const ok = await runMutation("assign", () => assignOperator(serviceId, body));
       if (ok) {
         onClose();
@@ -132,8 +132,8 @@ export default function AssignOperatorModal({ open, onClose, serviceId, runMutat
   return (
     <Modal open={open} title="Asignar operador" onClose={onClose} footer={footer}>
       <p className={`muted ${fields.hint}`}>
-        El backend debe aceptar <code className={fields.code}>operator_id</code> (UUID del usuario) en{" "}
-        <code className={fields.code}>POST /services/{"{id}"}/assign</code>.
+        El cuerpo de <code className={fields.code}>POST /services/{"{id}"}/assign</code> usa{" "}
+        <code className={fields.code}>assigned_user_id</code> (UUID del usuario operador).
       </p>
 
       {loadingUsers ? (

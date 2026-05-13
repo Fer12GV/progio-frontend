@@ -49,7 +49,7 @@ El backend expone listados paginados: `GET /contracts`, `GET /sites`, `GET /asse
 | GET | `/services` | Listar (filtros: status, asset_id, contract_id, site_id, fechas). **Roadmap:** query `operator_id` / `assigned_to` para «mis servicios» server-side; la GUI (`OperatorPanelPage`) filtra en cliente con `getServiceOperatorId` hasta entonces. |
 | POST | `/services` | Crear (Pendiente) |
 | GET | `/services/{id}` | Detalle (incluye `events[]` y `prebill?`) |
-| POST | `/services/{id}/assign` | Asignar operador — body POC GUI: `{ "operator_id": "<uuid>" }` (validar contra schema real en **backend POC.4**) |
+| POST | `/services/{id}/assign` | Asignar operador — body: `{ "assigned_user_id": "<uuid>" }` |
 | POST | `/services/{id}/start` | Iniciar (Pendiente → En Proceso) |
 | POST | `/services/{id}/pause` | Pausar (En Proceso → En Espera) |
 | POST | `/services/{id}/resume` | Reanudar (En Espera → En Proceso) |
@@ -60,6 +60,8 @@ El backend expone listados paginados: `GET /contracts`, `GET /sites`, `GET /asse
 | POST | `/services/{id}/reprocess` | Reproceso (con motivo obligatorio) |
 | GET | `/services/{id}/events` | Eventos del servicio (read-only, inmutables) |
 | POST | `/services/{id}/events/sync` | **Sincronización offline** (lote con `client_event_id`) |
+
+**Estado API (2026-05-12):** el backend ya expone estas rutas (prefijo `/api/v1` en `VITE_API_PREFIX`). **`close`** puede responder **422** mientras no exista **`prebill_id`** en servidor (**POC.5** backend). Cuerpos **`inputs`** / **`supervise`**: JSON flexible según OpenAPI.
 
 **Frontend:** `src/api/services.js`, `src/api/events.js`, `src/api/users.js` (`listUsers`). Hooks: `useServices`, `useService`, `useEvents`. UI: `ServicesPage`, `ServiceDetailPage` + `EventTimeline.jsx` + `ServiceActionBar.jsx` + modales (`AssignOperatorModal`, `RegisterInputsModal`, `CancelModal`, `ReprocessModal`) + `common/Modal.jsx`.
 

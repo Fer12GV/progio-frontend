@@ -7,21 +7,10 @@ import Spinner from "@/components/common/Spinner.jsx";
 import { listAssets } from "@/api/assets.js";
 import { listContracts } from "@/api/contracts.js";
 import { useServices } from "@/hooks/useServices.js";
+import { SERVICE_STATUS_FILTER_OPTIONS } from "@/constants/serviceStatusFilter.js";
 import { formatApiDetail, isCanceledError } from "@/utils/serviceApiHelpers.js";
 
 import styles from "./ServicesPage.module.css";
-
-/** Valores orientativos; el backend POC.4 puede usar otro vocabulario. */
-const STATUS_OPTIONS = [
-  { value: "", label: "Todos los estados" },
-  { value: "Pendiente", label: "Pendiente" },
-  { value: "En Proceso", label: "En proceso" },
-  { value: "En Espera", label: "En espera" },
-  { value: "Finalizado", label: "Finalizado" },
-  { value: "Cancelado", label: "Cancelado" },
-  { value: "Reprocesado", label: "Reprocesado" },
-  { value: "Bloqueado", label: "Bloqueado" },
-];
 
 const PER_PAGE = 20;
 
@@ -127,7 +116,7 @@ export default function ServicesPage() {
             onChange={onFilterChange(setStatus)}
             className={styles.filterField}
           >
-            {STATUS_OPTIONS.map((o) => (
+            {SERVICE_STATUS_FILTER_OPTIONS.map((o) => (
               <option key={o.value || "all"} value={o.value}>
                 {o.label}
               </option>

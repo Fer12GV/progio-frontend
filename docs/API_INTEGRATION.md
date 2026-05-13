@@ -1,6 +1,6 @@
 # PROGIO — Endpoints consumidos por el Frontend
 
-> Mantener sincronizado con `progio-backend/docs/API_INTEGRATION.md`. Cualquier cambio en el contrato debe replicarse aquí (regla `feedback_update_both_projects.md`).
+> Mantener sincronizado con `progio-backend/docs/API_INTEGRATION.md`. Cualquier cambio en el contrato debe replicarse aquí (regla `feedback_update_both_projects.md`). **Demo / arranque API:** `progio-backend/docs/DEMO_GUIDE.md` y `make demo` en el repo backend.
 
 ## Convenciones (recordatorio)
 

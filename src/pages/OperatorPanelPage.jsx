@@ -7,19 +7,12 @@ import Spinner from "@/components/common/Spinner.jsx";
 import Button from "@/components/common/Button.jsx";
 import { useAuth } from "@/context/AuthContext.jsx";
 import { useServices } from "@/hooks/useServices.js";
+import { OPERATOR_PANEL_STATUS_FILTER_OPTIONS } from "@/constants/serviceStatusFilter.js";
 import { getServiceOperatorId } from "@/utils/serviceApiHelpers.js";
 
 import styles from "./OperatorPanelPage.module.css";
 
 const PER_PAGE = 50;
-
-const STATUS_OPTIONS = [
-  { value: "", label: "Todos los estados" },
-  { value: "Pendiente", label: "Pendiente" },
-  { value: "En Proceso", label: "En proceso" },
-  { value: "En Espera", label: "En espera" },
-  { value: "Finalizado", label: "Finalizado" },
-];
 
 const ASSIGNMENT_OPTIONS = [
   { value: "mine", label: "Sólo asignados a mí" },
@@ -83,7 +76,7 @@ export default function OperatorPanelPage() {
             }}
             className={styles.filterField}
           >
-            {STATUS_OPTIONS.map((o) => (
+            {OPERATOR_PANEL_STATUS_FILTER_OPTIONS.map((o) => (
               <option key={o.value || "all"} value={o.value}>
                 {o.label}
               </option>

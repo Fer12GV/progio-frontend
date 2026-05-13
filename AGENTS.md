@@ -30,9 +30,9 @@ Sin salida = libre. Si `LISTEN`, elegir otro puerto y actualizar `.env` del fron
 
 El comando **`/continuar`** (y seguir este `AGENTS.md` en orden) deja el contexto **al día** siempre que existan y se lean los archivos locales: **`CLAUDE.md`**, **`docs/DEVPLAN.md`** (marca **«AQUÍ ESTAMOS»**), **`memory/MEMORY.md`**, **`.env` / `.env.example`**. No depende del chat anterior: el modelo debe **abrir** esas rutas, no asumir.
 
-- **Backend hermano** (`progio-backend/`): auth **`/api/v1/auth/*`** (POC.2 ✓); catálogo **`GET /api/v1/contracts`**, **`/sites`**, **`/assets`** (POC.3 ✓); **servicios** **`GET/POST /api/v1/services`** + transiciones + **`GET /services/{id}/prebill`** + cierre con prefactura (**POC.4** ✓, **POC.5** ✓). **«AQUÍ ESTAMOS» [BACKEND]:** **POC.6** (verificación integración). Migraciones **`0005`** + **`0006`**.
+- **Backend hermano** (`progio-backend/`): API demo lista (**POC.1–POC.5** ✓). Plan backend **«AQUÍ ESTAMOS»** → **`docs/DEVPLAN.md` → POC.7** (capturas/checklist); entregables demo ya hechos: **`make demo`**, **`make demo-latency`**, **`docs/DEMO_GUIDE.md`**, **`POC.6.2`** (latencia). Migraciones **`0005`** + **`0006`**. *Verificación navegador en backend (**POC.6.1** / **POC.6.3**) = este mismo trabajo en GUI (**[FRONTEND]**).*
 - **Este repo:** `npm install`, `.env.example` → `.env`, `npm run dev`, login con seed del backend (`admin.general@…` + `SEED_DEMO_PASSWORD` si `SEED_EMAIL_DOMAIN=example.com`).
-- **Siguiente en este repo** (prioridad **demo navegable por slices**, ver `docs/DEVPLAN.md`): **POC.7.2** (**AQUÍ ESTAMOS** — ciclo completo en GUI contra API real). Login 5 roles seed verificado (**POC.7.1** ✓). Medir latencia en **POC.7.3** tras el recorrido.
+- **Siguiente en este repo** (ver `docs/DEVPLAN.md` + **`memory/continuar_snapshot.md`**): **POC.7.2** (**AQUÍ ESTAMOS** — ciclo completo en GUI). Antes: en backend ejecutar **`make demo`**. Login 5 roles (**POC.7.1** ✓). Luego **POC.7.3–7.5** (latencia páginas, refresh 401, bundle).
 
 ## Cuándo aplicar
 

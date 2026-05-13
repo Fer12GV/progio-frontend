@@ -52,7 +52,7 @@ El backend expone listados paginados: `GET /contracts`, `GET /sites`, `GET /asse
 | POST | `/services/{id}/assign` | Asignar operador — body: `{ "assigned_user_id": "<uuid>" }` |
 | POST | `/services/{id}/start` | Iniciar (Pendiente → En Proceso) |
 | POST | `/services/{id}/pause` | Pausar (En Proceso → En Espera) |
-| POST | `/services/{id}/resume` | Reanudar (En Espera → En Proceso) |
+| POST | `/services/{id}/resume` | Reanudar (En Espera → En Proceso). **409** si no está en `en_espera`. |
 | POST | `/services/{id}/inputs` | Registrar insumos — body POC GUI: `{ "items": [{ "description", "quantity", "unit" }] }` (ajustar al contrato definitivo) |
 | POST | `/services/{id}/supervise` | Supervisión |
 | POST | `/services/{id}/close` | Cerrar (En Proceso → Finalizado, **requiere prefactura válida**) |

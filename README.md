@@ -7,22 +7,47 @@ Interfaz web **PROGIO V1.1** (React 18 + Vite 5). Consume la API del backend en 
 - Node **20 LTS** + npm
 - Backend levantado y seed aplicado (ver README del backend)
 
-## Configuración
+## Arranque (obligatorio antes de abrir el navegador)
+
+Si ves **`ERR_CONNECTION_REFUSED`** en `http://localhost:3300`, **no hay servidor escuchando**: debes levantar la GUI (no basta con tener solo el backend en :9001).
+
+**Opción A — desarrollo (terminal abierta):**
 
 ```bash
-cp .env.example .env
-# Ajustar VITE_API_BASE_URL y VITE_API_PREFIX si tu backend no usa los valores por defecto.
+cp .env.example .env   # si aún no existe
 npm install
-npm run dev
+make dev               # o: npm run dev
 ```
 
-Abrir **http://localhost:3300** (o el puerto definido en `FRONTEND_PORT` / `VITE_DEV_PORT`).
+**Opción B — Docker (segundo plano, sin Vite):**
+
+```bash
+make up                # docker compose up --build -d
+```
+
+**Stack completo (API + datos seed):**
+
+```bash
+# Terminal 1 — backend
+cd ../progio-backend && make demo
+
+# Terminal 2 — frontend (elige A o B arriba)
+cd progio-frontend && make dev    # o make up
+```
+
+Comprobar ambos puertos: `make demo-check`
+
+Abrir **http://localhost:3300** (o el valor de `FRONTEND_PORT` en `.env`).
 
 ## Scripts
 
 | Comando | Descripción |
 |---------|-------------|
-| `npm run dev` | Servidor de desarrollo Vite |
+| `make dev` | Servidor Vite en `http://localhost:3300` |
+| `make up` | GUI en Docker (nginx) en segundo plano |
+| `make demo` | Ejecuta `make demo` en el backend + instrucciones GUI |
+| `make demo-check` | Verifica que API (:9001) y GUI (:3300) respondan |
+| `npm run dev` | Igual que `make dev` |
 | `npm run build` | Build de producción |
 | `npm run preview` | Previsualizar build |
 | `npm run lint` | ESLint |
@@ -39,3 +64,11 @@ Abrir **http://localhost:3300** (o el puerto definido en `FRONTEND_PORT` / `VITE
 ## Login demo
 
 Usar las cuentas seed del backend (ej. `admin.general@example.com` con `SEED_DEMO_PASSWORD` cuando `SEED_EMAIL_DOMAIN=example.com`).
+
+## Presentación al cliente
+
+Guía **por objetivos con criterios de aceptación** (no avanzar hasta superar cada bloque): **`docs/DEMO_CLIENTE_PRESENTACION.md`**.
+
+```bash
+make presentacion   # checklist rápido + demo-check
+```

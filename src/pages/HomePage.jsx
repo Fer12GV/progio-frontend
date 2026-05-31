@@ -80,8 +80,9 @@ export default function HomePage() {
             <div className={styles.quickRow}>
               <dt>Servicios</dt>
               <dd>
-                Línea de tiempo y acciones del ciclo — disponible cuando el backend exponga{" "}
-                <strong>POC.4</strong> (<code>/services</code>).
+                <Link to="/services" className={styles.quickLink}>
+                  Ciclo operativo, línea de tiempo y prefactura
+                </Link>
               </dd>
             </div>
             <div className={styles.quickRow}>

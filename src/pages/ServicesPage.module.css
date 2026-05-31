@@ -4,13 +4,23 @@
   margin: 0 auto;
 }
 
+.pageHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: calc(var(--space) * 1.5);
+  margin-bottom: calc(var(--space) * 2);
+}
+
 .title {
   margin: 0 0 calc(var(--space) * 1.25);
   font-size: 1.5rem;
 }
 
 .lead {
-  margin: 0 0 calc(var(--space) * 2);
+  margin: 0;
+  max-width: 42rem;
   font-size: 0.95rem;
   line-height: 1.5;
 }
